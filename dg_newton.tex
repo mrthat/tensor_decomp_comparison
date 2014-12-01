@@ -1,0 +1,268 @@
+\section{Newton method by de Lathauer and Ishteva}
+
+%// add method from \cite{IDLAVH09}
+Another differential-geometric variant of Newton method
+was proposed by Ishteva et al in \cite{IDLAVH09}.
+It is a further development of the method proposed in 
+\cite{absil_2009}, and it is aimed at finding zeros
+of a vector field that satisfies certain symmetry condition.
+The gradient of the cost functions that we used before
+does not have this property, so it is necessary to
+define another vector field that has zero at the optimal
+for Tucker2 matrices.  
+
+Let $A \in \R^{d_1 \times d_2 \times d_3}$. In order to avoid conf
+We fix matrix $U$ to be identity matrix of size $d_1$ and define two matrix-valued functions to shorten the notation:
+\begin{eqnarray}
+ R_2 := V^T A_{(2)} ( W \otimes U) \\
+ R_3 := W^T A_{(3)} ( U \otimes V) 
+\end{eqnarray}
+Here $V$ and $W$ are (unknown) factor matrices, as before.
+The vector field $\Phi$ in this method consists of two components
+$\Phi_2$ and $\Phi_3$ defined by
+
+\begin{eqnarray}
+ \Phi_2 = V R_2 R_2^T - A_{(2)} ( W \otimes U)(W \otimes U)^T A_{(2)}^T V, \\
+ \Phi_3 = W R_3 R_3^T - A_{(3)} ( U \otimes V)(U \otimes V)^T A_{(3)}^T W. 
+\end{eqnarray}
+
+The optimal matrices $V$ and $W$ are zeros of $\Phi$ (see the paper for the proof),
+but $\Phi$ has other zeros which are not optimal, so we have to solve
+the following system of equations iteratively with 
+initial values that are close enough to optimum:
+\begin{eqnarray}
+    \Phi_2(V, W) = 0 \\
+    \Phi_3(V, W) = 0
+\end{eqnarray}
+
+The function $\Phi$ has the desired symmetry property: 
+
+\begin{eqnarray}
+\forall S_2 \in O(d_2) \quad \Phi_2(VS_2) = \Phi_2(V) S_2, \\
+\forall S_3 \in O(d_3) \quad \Phi_3(WS_3) = \Phi_3(W) S_3. 
+\end{eqnarray}
+Here $O(d_i)$ denotes the group of orthogonal $d_i \times d_i$ matrices. This implies
+\begin{equation}
+\forall S_2 \in O(d_2), S_3 \in O(d_3) \quad \Phi(VS_2, WS_3)= 0 \mbox{ if and only if } \Phi(V, W) = 0.
+\end{equation}
+
+This means that zeros 
+of $\Phi$ are not isolated. This degeneracy will disappear, if
+we identify $V$ with all $VS_2$
+and $W$ with all $WS_3$. As in the previous section, the actual manifold
+on which the algorithm works will be a direct product of two quotient manifolds.
+
+
+
+Let us describe this quotient more formally.  
+By $\R^{n\times p}_{*}$ we denote the set of all real maximal-rank $n \times p$ matrices.
+\begin{equation}
+    \R^{n \times p}_{*} = \{ A \in \R^{n \times p} : rank(A) = \min(n,p) \}.
+\end{equation}
+We always assume that $n \geq p$, so the rank is $p$. This condition holds if and only if
+the first $p$ singular values of $A$ are non-zero, so it is equivalent to $\det(A^TA) \neq 0$.
+As an open subset of $\R^{n \times p}$, this set is naturally a manifold.
+For $A \in \R^{n \times p}_{*}$ we denote by $[A]$ the set 
+$\{ AS \mid S \in O(p) \}$ and we put
+\begin{equation}
+    \R^{n \times p}_{*} / O(p) := \{ [A] \mid A \in \R^{n \times p}_{*} \}.
+\end{equation}
+This set is endowed with the structure of a smooth manifold by the quotient manifold
+theorem (add ref). Moreover, it is a base of a fiber bundle whose total space
+is $\R^{n \times p}$ and whose fibers are diffeomorphic to $O(p)$.
+There is a projection map
+\begin{equation}
+    \pi \colon \R^{n \times p}_{*} \to \R^{n \times p}_{*} / O(p)
+\end{equation}
+that takes each $A$ to its equivalence class $[A]$. For every point $[A]$ of $\R^{n \times p}_{*} / O_p$, its pre-image
+$\pi^{-1}( [A] ) = [A]$ (considered as a subset of $\R^{n \times p}_{*}$) is a submanifold.
+It is well-known that the tangent space to $O(p)$ at the identity is
+the set of all skew-symmetric matrices. In order to get \textit{vertical space}
+at $X \in \R^{n \times p}_{*}$, we just multiply it with $X$, so
+\begin{equation}
+    \mathcal{V}_X = T_X[X] = X \mathfrak{o}(p).
+\end{equation}
+If we define the Riemannian metric on $\R^{n \times p}_{*}$ as
+\begin{equation}
+    g_X(Z_1, Z_2) := \tr(Z_1^T P^p_X(Z_2) + Z_1^T X (X^T X)^{-2} X^T Z_2),
+\end{equation}
+where 
+\begin{equation}
+    P^p_X(Y) := Y - X(X^TX)^{-1}X^T Y,
+\end{equation}
+then the orthogonal projector along $\mathcal{V}_X$, that is, the projection to a horizontal space,
+will be 
+\begin{equation}
+    P^h_X(Y) := Y - Y \skw ((X^TX)^{-1} X^T Y.
+\end{equation}
+The image of the projector is a \textit{horizontal space}
+\begin{equation}
+    \mathcal{H}_X = \im (P^h_X)
+\end{equation}
+
+
+Suppose that we have a function $G \colon \R^{n \times p}_{*} \to \R^{n \times p}$
+that satisfies the symmetry condition $G(XS) = G(X)S$ for all orthogonal $S$.
+If we interpret the codomain of $G$
+as $T_X\R^{n \times p}$, we identify $G$ with a vector field
+on $\R^{n \times p}_{*}$. If we project this vector field to horizontal space,
+e.g., introduce $\bar{\xi}(X) = P^h_X(G(X))$, we obtain the so-called 
+\textit{horizontal lift} of $G$. Horizontal space can be identified
+with the tangent space to the base $\R^{n \times p}_{*} / O(p)$, hence
+we obtain the well-defined  correspondence between symmetric vector fields
+on $\R^{n \times p}_{*}$ and vector fields on the quotient manifold
+\begin{equation}
+( X \mapsto G(X) ) \mapsto (X \mapsto P^h_{X}(G(X))).
+\end{equation}
+This correspondence preserves zeros and removes degeneracy, and it makes sense
+to apply Newton method to find a zero of $\bar{\xi}$.
+
+
+There is a general scheme for Newton method on a manifold $M$ with affine connection $\nabla$ (\cite{adler_spine}).
+Let $\xi$ be a vector field on $M$ and $x$ be a tentative approximate
+solution of $\xi(x) = 0$. To improve $x$, we solve the system 
+\begin{equation}
+    J_{\xi}(x)[\eta] = - \xi_x,
+\end{equation}
+where $J_{\xi}(x)$ is an operator on $T_xM$ defined by $J_{\xi}(x)[\zeta] = \nabla_{\zeta} \xi$
+and get the vector $\eta \in T_xM$. Covariant differentiation with 
+affine connection $\nabla$ is a generalization (which has geometric sense) of
+an ordinary differentiation in the Euclidean space, so this step is the 
+same as in ordinary Newton method. Now we need some way to get 
+a new point on $M$ given $x$ and $\eta$. In order to do this we assume
+that there is a function $R \colon TM \to M$. Each point of the tangent bundle $TM$
+has two components $(p, v)$, $p \in M$, $v \in T_pM$, so $R$ is a function
+of two arguments, the first one being a point $p$ on $M$
+and the second one being a vector from $T_pM$. We use this function
+to get the next approximation
+\begin{equation}
+    x_{+} = R(x, \eta).
+\end{equation}
+Not every function $R$ can be used as a retraction, the following 
+conditions must hold (by $R_p$ we denote the restriction of $R$ to $T_pM$,  so $R_p \colon T_pM \to T_pM$):
+\begin{enumerate}
+    \item $R$ is a smooth function;
+    %\item For every $p \in M$, $R_p$ is defined on some open subset of $T_pM$ that contains $\vec{0}$;
+    \item $R_p(v) = x$ if and only if $v = \vec{0} \in T_pM$;
+
+    %\item $DR_p(\vec{0}) = id_{T_pM}$ (the differential of $R_p$ at $0$ is identity)
+    \item If $p \in M$, we denote the zero vector of $T_pM$ as $0_p$. The tangent space to $TM$ at point $(p, 0_p)$
+        is $T_pM \times T_pM$, because $T_pM$ is a vector space and a tangent space to $T_pM$
+        at every point is identified with $T_pM$ itself ($T_{0_p}(T_pM) = T_pM$). Thus the
+        differential of $R$ at the point $(p, 0_p)$ is a linear function $(DR(p, 0_p))(\cdot, \cdot)$
+        of two vectors from $T_pM$. We require
+        \begin{equation}
+          (DR(p, 0_p))(u, v) = u + v, \quad (u, v) \in T_pM \times T_pM.
+        \end{equation}
+\end{enumerate}
+
+The affine connection on $\R^{n \times p}_{*} / O(p)$ used in this method is 
+\begin{equation}
+    \nabla_{\eta_{\pi(X)}} \xi (X) := P^h_X D \bar{\xi}(X)[\eta_X]
+\end{equation}
+and the retraction is
+\begin{equation}
+    X_{+} = X + \eta_X.
+\end{equation}
+
+Since we work on the product of two quotient manifolds,
+the unknown vector $\Delta$ has two components 
+$\Delta = (\Delta_2, \Delta_3) \in \mathcal{H}_V \times \mathcal{H}_W$, and
+the system to be solved is
+\begin{eqnarray}
+    P^h_V D (P^h_V \Phi_2)(V, W)[\Delta] = - P^h_V \Phi_2(V, W) \\
+    P^h_W D (P^h_W \Phi_3)(V, W)[\Delta] = - P^h_W \Phi_3(V, W). 
+\end{eqnarray}
+Formally this is a system on $\R^{n \times p}_{*}$, but it represents
+a system on the quotient manifold lifted to the total space.
+
+
+We start by computing the horizontal lift $P^h_V\Phi_2$ of the field $\Phi_2$.
+\begin{multline}
+ P^h_V( \Phi_2 ) = V R_2 R_2^T - A_{(2)} (W \otimes U) (W \otimes U)^T A_{(2)}^T V \\
+ + V \skw( (V^T V)^{-1} V^T A_{(2)} (W \otimes U)(W \otimes U)^T A_{(2)}^T V )
+\end{multline}
+Now we need to differentiate this expression. We shall use the following properties
+of differential (\cite{matrix_cookbook}):
+\begin{enumerate}
+    \item Differentiation commutes with linear operators. If $K$ is a linear operator and $\Phi$, $G$ are
+    arbitrary matrix function, then 
+    \begin{equation}
+    D(K(\Phi)) = K(D(\Phi)).
+    \end{equation}
+        In particular, 
+        \begin{eqnarray}
+        D(\Phi+G) = D(\Phi) + D(G),\\ 
+        D(\Phi^T) = (D(\Phi))^T.
+        \end{eqnarray}
+    \item Differential of constant is $0$.
+    \item Differential of identity. Here by $V$ we mean the function
+        $ (V, W) \mapsto V$,
+        $\R^{n_2 \times d_2}_{*}  \times \R^{n_3 \times d_3}_{*} \to \R^{n_2 \times d_2}_{*}$.
+        \begin{eqnarray}
+        D(V)[\Delta_2, \Delta_3] = \Delta_2, \\
+        D(W)[\Delta_2, \Delta_3] = \Delta_3.
+        \end{eqnarray}
+    \item Leibniz formula (differential of product) holds for matrix multiplication
+        and for Kronecker product (the order of factors matters). If $\Phi$, $G$ are matrix-valued
+        functions, then
+        \begin{eqnarray}
+        D(\Phi G)[\Delta] = D(\Phi)[\Delta] G + \Phi (D(G)[\Delta]) \\
+        D(\Phi \otimes G)[\Delta] = D(\Phi)[\Delta] \otimes G + \Phi \otimes D(G)[\Delta]
+        \end{eqnarray}
+        \item Differential of inversion. If $\Phi$ is a matrix-valued function, then
+        \begin{equation}
+        D(\Phi^{-1}) = - \Phi^{-1} D(\Phi) \Phi^{-1}
+        \end{equation}
+\end{enumerate}
+
+Applying these rules and plugging in the definitions of $R_2$ and $R_3$, we obtain
+\begin{multline}
+    \label{diff_p_h_v}
+ D(P^h_V \Phi_2) [ \Delta ] = \Delta_2 R_2 R_2^T + V \Delta_2^T A_{(2)} (W \otimes U) R_2^T \\ 
+ + V V^T A_{(2)} D ( ( W \otimes U)(W \otimes U)^T ) [\Delta] A_{(2)}^T V \\
++ V R_2 (W \otimes U)^T A_{(2)}^T \Delta_2  \\
+ - A_{(2)} D ( ( W \otimes U)(W \otimes U)^T ) [\Delta] A_{(2)}^T V \\
+-  A_{(2)}  ( W \otimes U)(W \otimes U)^T A_{(2)}^T \Delta_2 \\
++ \Delta_2 \skw ( (V^T V)^{-1} R_2 R_2^T ) \\
++ V \skw ( - (V^T V)^{-1} ( \Delta_2^T V + V^T \Delta_2) (V^T V)^{-1} R_2 R_2^T) \\ 
++  V \skw ( (V^T V)^{-1} ( \Delta_2^T A_{(2)} ( W \otimes U) R_2^T + R_2 (W \otimes U)^T A_{(2)}^T \Delta_2 ) ) \\
++  V \skw ( (V^T V)^{-1} ( V^T A_{(2)} D ( ( W \otimes U)(W \otimes U)^T)[\Delta]  A_{(2)}^T V ) ) 
+\end{multline}
+It remains to expand
+\begin{equation}
+D( ( W \otimes U)(W \otimes U)^T ) [\Delta] = ( \Delta_3 \otimes U) (W \otimes U)^T  + ( W \otimes U )( \Delta_3 \otimes U)^T 
+\end{equation}
+Note that $U$ is fixed to be identity, otherwise we would have $4$ terms here instead of $2$.
+The last step is to apply $P^h_V$ to this long expression. We shall not give the final result,
+because in a program this operation can be performed automatically.
+However, we should note that $P^h_V(V \skw A) = 0$ for any matrix $A$ (of the appropriate size),
+so the last $3$ terms in \eqref{diff_p_h_v} do not contribute to the final expression.
+
+In the same way we compute the lift of $\Phi_3$
+\begin{multline}
+ P^h_W \Phi_3 = W R_3 R_3^T - A_{(3)} (U \otimes V) (U \otimes V)^T A_{(3)}^T W  \\
+ + W \skw( (W^T W)^{-1} W^T A_{(3)} (U \otimes V)(U \otimes V)^T A_{(3)}^T W )
+ \end{multline}
+and its differential
+\begin{multline}
+\label{diff_p_h_w}
+ D(P^h_W \Phi_3) [ \Delta ] = \Delta_3 R_3 R_3^T + W \Delta_3^T A_{(3)} (U \otimes V) R_3^T  \\
+ + W W^T A_{(3)} D ( ( U \otimes V)(U \otimes V)^T ) [\Delta] A_{(3)}^T W \\
++ W R_3 (U \otimes V)^T A_{(3)}^T \Delta_3  \\
+ - A_{(3)} D ( ( U \otimes V)(U \otimes V)^T ) [\Delta] A_{(3)}^T W \\
+-  A_{(3)}  ( U \otimes V)(U \otimes V)^T A_{(3)}^T \Delta_3 \\
++ \Delta_3 \skw ( (W^T W)^{-1} R_3 R_3^T ) \\
++ W \skw ( - (W^T W)^{-1} ( \Delta_3^T W + W^T \Delta_3) (W^T W)^{-1} R_3 R_3^T) \\
++  W \skw ( (W^T W)^{-1} ( \Delta_3^T A_{(3)} ( U \otimes V) R_3^T + R_3 (U \otimes V)^T A_{(3)}^T \Delta_3 ) ) \\
++  W \skw ( (W^T W)^{-1} ( W^T A_{(3)} D ( ( U \otimes V)(U \otimes V)^T)[\Delta]  A_{(3)}^T W ) ) 
+\end{multline}
+where
+\begin{equation}
+ D( ( U \otimes V)(U \otimes V)^T ) [\Delta] = ( U \otimes \Delta_2 )(U \otimes V)^T + ( U \otimes V)  ( U \otimes \Delta_2 )^T 
+\end{equation}
+
+
+As before, the last $3$ terms in \eqref{diff_p_h_w} can be ignored. All that remains to do now
+is to apply the same vectorization rules as in Newton-Grassmann method to get the matrix of the linear system.
+

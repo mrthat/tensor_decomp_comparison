@@ -1,0 +1,60 @@
+\section{Higher-order Orthogonal Iteration (HOOI)}
+
+Next algorithm is Higher-Order Orthogonal Iteration (HOOI). (see~\cite{kolda_bader_2009}).
+This algorithm is a special case of alternating least squares.
+In one iteration of this method we fix $F_2$ and optimize the cost function for the other factor matrix $F_3$,
+then fix $F_3$ and solve the optimization problem for $F_2$. 
+The advantage of this procedure is that optimization for one factor matrix can be solved exactly
+by SVD, as mentioned earlier. The pseudocode form of the algorithm is
+
+\begin{algorithm}
+\caption{HOOI}\label{HOOI}
+\begin{algorithmic}[1]
+\State Initialize $F_2$, $F_3$ using HOSVD
+\Repeat 
+
+
+$\mathcal{B} := \A \times{_3} F_3^T$
+    
+    
+$\mathcal{C} := \A \times{_2} F_2^T$
+    
+    
+$F_2 := d_2 \mbox{ leading left singular vectors of }{\mathcal{B}}_{(2)}$
+    
+    
+    $F_3 := d_3 \mbox{ leading left singular vectors of }{\mathcal{C}}_{(3)}$
+\Until termination criterion satisfied or maximum iterations exhausted.
+\end{algorithmic}
+\end{algorithm}
+
+
+There are several standard options for termination criterion.
+We may require that the norm of the residual is below
+some predefined threshold,
+\begin{equation}
+    R := \| \A - \A \times_2 F_2^T \times_3 F_3^T \| \leq \epsilon,
+\end{equation} 
+or we may consider the relative norm,
+
+\begin{equation}
+    \frac{R}{\| \A \| } \leq \epsilon.
+\end{equation} 
+
+
+Another option would be to stop when the norm or the relative norm of the gradient of the objective
+function $\Phi$ gets small enough,
+\begin{eqnarray}
+    \| \nabla \Phi \| \leq \epsilon \mbox{ or}\\
+    \frac{ \| \nabla \Phi \|  }{\| \A \| } \leq \epsilon.
+\end{eqnarray} 
+The compact formula for the gradient will be given in the section on Newton-Grassmann
+method (formula \eqref{grad_phi}). It is important to use the projected
+gradient here, the formal gradient (vector of partial
+derivatives with respect to the elements of $V$ and $W$, its compact
+representation is given in the formula \eqref{formal_grad_phi})
+increases as we run the iterations, due to the 
+orthogonality constraints.
+It is also possible to stop iterations when there is no further improvement. 
+For example, let $R_k$ be the norm of the residual
+at the {$k$th} iteration. We keep iterating as long as  $R_k \leq R_{k-1} - \epsilon$.

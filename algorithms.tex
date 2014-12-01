@@ -1,0 +1,48 @@
+\chapter{Algorithms}
+
+
+\section{Higher-order SVD}
+This method is analogous to standard method of computing PCA for matrices.
+Recall that if $A$ is an $m \times n$ real matrix, then it can be decomposed as 
+\begin{equation}
+ A = U \Sigma V^T,
+\end{equation}
+where $\Sigma$ is a (rectangular) diagonal matrix with non-negative elements on the diagonal and $U$ and $V$ are orthogonal matrices: $U \in O(m)$, 
+$V \in O(n)$. $U$ is called the matrix of left singular vectors (its columns are eigenvectors of $AA^T$), $V$ is the
+matrix of right singulare vectors (eigenvectors of $A^TA$). Let $ \sigma_1 \geq \dots \geq \sigma_r$ be non-zero diagonal elements of $\Sigma$, then the rank of $A$ is $r$. The optimization problem
+\begin{equation}
+\| A - B \| \to \min \mbox{subject to $\rk B = k $}
+\end{equation}
+is a matrix analog of \eqref{tucker_min}. Unlike tensor case, this problem can be solved exactly.
+Let $\Sigma_k$ be  the matrix obtained from $\Sigma$ by setting $\sigma_{k+1}, \dots, \sigma_r$
+to $0$, then the optimal matrix $B$ is $U \Sigma_k V^T$. 
+
+The higher-order singular value decomposition for Tucker2 is formulated as follows.
+
+Compute SVD of unfoldings $\A_{(2)}$ and $\A_{(3)}$:
+
+\begin{eqnarray}
+ \A_{(2)} = U_2 \Sigma_2 V_2^T  \\
+ \A_{(3)} = U_3 \Sigma_3 V_3^T
+\end{eqnarray}
+Truncate matrices of left singular vectors $U_2$ and $U_3$ and take the result
+as projection matrices $F_2$, $F_3$.
+
+\begin{eqnarray}
+F_2 = U_2(:, 1:r_2) \\
+F_3= U_3(:, 1:r_3)
+\end{eqnarray}
+
+This method is a heuristics, there is no mathematical proof that it gives
+the approximation which is in some sense 'good'. However, in practice it produces
+results that are reasonable and is used as initialization for iterative methods.
+
+\input{hooi.tex}
+
+\input{math_prelimin.tex}
+
+\input{newton_grassmann.tex}
+
+\input{dg_newton.tex}
+
+

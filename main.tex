@@ -1,0 +1,102 @@
+\documentclass{report}
+\usepackage[utf8]{inputenc}
+\usepackage[toc,page]{appendix}
+\usepackage{cite}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{indentfirst}
+\usepackage{listings}
+\usepackage{amsfonts,amssymb}
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+\usepackage{titlesec}
+%\newcommand{\sectionbreak}{\clearpage}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\B}{\mathcal{B}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\G}{\mathcal{G}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\M}{\mathcal{M}}
+
+
+\newcommand{\w}{{\mathbf{w}}}
+\newcommand{\f}{{\mathbf{f}}}
+\newcommand{\col}{{\col}}
+
+\newcommand{\bmu}{{\boldsymbol{\mu}}}
+
+
+
+%\theoremstyle{plain}% default
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{prop}[thm]{Proposition}
+%\theoremstyle{definition}
+\newtheorem{defn}{Definition}[section]
+\newtheorem{conj}{Conjecture}[section]
+\newtheorem{exmp}{Example}[section]
+
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\newenvironment{proof}[1][Proof]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{definition}[1][Definition]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{example}[1][Example]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{remark}[1][Remark]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+
+\newcommand{\qed}{\nobreak \ifvmode \relax \else
+      \ifdim\lastskip<1.5em \hskip-\lastskip
+      \hskip1.5em plus0em minus0.5em \fi \nobreak
+      \vrule height0.75em width0.5em depth0.25em\fi}
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\vect}{vec}
+\DeclareMathOperator*{\skw}{skew}
+\DeclareMathOperator*{\tr}{tr}
+\DeclareMathOperator*{\rk}{rank}
+\DeclareMathOperator*{\im}{im}
+\title{tensor_decomp_comparison}
+\author{a.nigmetov }
+\date{December 2013}
+
+\begin{document}
+
+\tableofcontents
+
+% describe model
+% 
+
+%One of the approaches to tensor decomposition
+
+%Bolkart and WuhrerIn the multilinear model from\cite{bolkart_wuhrer_2013} 
+
+
+\input{intro_and_related_work.tex}
+
+\input{tensor_notation.tex}
+
+
+\input{algorithms.tex}
+
+\input{evaluation.tex}
+
+\chapter{Conclusion}
+
+
+
+
+\bibliography{biblio1}{}
+\bibliographystyle{plain}
+\end{document}

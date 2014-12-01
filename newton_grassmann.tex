@@ -1,0 +1,323 @@
+\subsection{Newton-Grassmann method}
+
+This method was introduced by Elden and Savas. 
+The general scheme of the method is as follows.
+Let $\Phi \colon M \to \R$ be a smooth function 
+on a Riemannian manifold $M$, we want to maximize $\Phi$.
+Let $p \in M$
+be a current approximation. The function $\Phi$ has the gradient 
+$\nabla \Phi (p) \in T_pM$ and the Hessian $H(\Phi)_p$
+which can be interpreted as a linear operator on $T_pM$.
+If $p$ is close enough to the point of maximum of $\Phi$,
+the Hessian is non-singular, and there exists a unique tangent vector 
+$\Delta \in T_pM$ that satisfies the equation
+\begin{equation}
+    \label{NewgrGeneral}
+    H(\Phi)_p(\Delta) = - \nabla \Phi(p).
+\end{equation}
+This vector defines the geodesic curve $t \mapsto \gamma(t)$ on $M$,
+we move along it to find the next approximation to the solution,
+\begin{equation}
+p_{+} = \gamma(1).
+\end{equation}
+
+
+The manifold on which the method by Elden and Savas works is the product
+of \textit{Grassmann manifolds}, and we start with definition and basic properties
+of this manifold.  Let $k \leq n$ be positive integers. We interpret the manifold $St(n, k)$
+of $n \times k$ matrices with orthonormal columns
+as the set of orthonormal basises of $k$-dimensional subspaces
+of $\R^n$. Two matrices $X$ and $Y$ represent the same subspace,
+if there exists an orthogonal $k \times k$ matrix $U$ such that
+$X = YU$. This defines an equivalence relation $\sim$ on $St(n, k)$, and the conditions
+of the quotient manifold theorem are fulfilled. The quotient $St(n, k)/ \sim$ is called
+Grassmann manifold and denoted $Gr(n, k)$.
+Let $[X] \in Gr(n,k)$ be an equivalence class of matrix $X$.
+It is known that the tangent
+space $T_{[X]}Gr(n, k)$ can be identified with the set of matrices $\Delta$
+such that 
+\begin{equation}
+    X^T \Delta = 0
+\end{equation}
+Let $\Pi$ be an operator
+\begin{equation}
+    \Pi_X(W) = W - XX^TW
+\end{equation}
+This operator projects $\R^{n \times k}$ onto $T_XGr(n, ,k)$. Indeed,
+
+\begin{equation}
+    X^T \Pi_X(W) = X^T W - X^TXX^T W = X^TW - X^TW = 0,
+\end{equation}
+since $X$ has orthonormal columns, that is, $X^TX = I$.
+
+
+The canonical inner product in $T_X Gr(n, k)$ is defined by
+\begin{equation}
+    \langle \Delta_1, \Delta_2 \rangle := \tr( \Delta_1^T \Delta_2).
+\end{equation}
+Equipped with this inner product, $Gr(n, k)$ becomes a Riemannian
+manifold. The formula
+for the geodesic curve that passes through $X$ and has at this point tangent 
+vector $\Delta$ is 
+\begin{equation}
+    X_{\Delta}(t) = XV \cos (t \Sigma) V^T + U \sin(t \Sigma) V^T,
+\end{equation}
+where $U \Sigma V^T$ is the thin SVD of $\Delta$.
+
+
+In the sequel we shall abuse the notation by identifying $[X] \in Gr(n, k)$
+and its representative $X \in \R^{n \times k}$. Functions $F$
+on $Gr(n, k)$ will be interpreted as functions on $St(n, k)$ with the additional
+symmetry property
+\begin{equation}
+    \label{sym_grass}
+    \forall U \in O(k) \quad F(XU) = F(X).
+\end{equation}
+Since $St(n,k)$ can be identified with the subset of $\R^{nk}$, we can compute
+the formal gradient of $F$ by taking partial derivatives of $F$
+with respect to all entries of the argument $X$. Let this gradient
+be $F_X(X)$, then the gradient of $F$ as a function on Grassmannian
+is computed by projecting:
+\begin{equation}
+\nabla F (X) = \Pi_{X} F_X(X).
+\end{equation}
+
+We noticed before that the objective function in Tucker2 decomposition 
+problem
+\begin{equation}
+\Phi(Y,Z) = \frac{1}{2} \| \A \times _{2} Y \times _{3} Z \| 
+\end{equation}
+satisfies the symmetry property \eqref{sym_grass} w.r.t. both arguments,
+so we can interpret it as a function on $M = Gr(d_2, r_2) \times Gr(d_3, r_3)$.
+We start with computing its gradient. 
+
+%Recall that for any function $f$ the linear part of $ f(x(t)) - f(x(0)) $ is equal to $ \langle \Delta, \nabla f \rangle $,
+%where $\Delta$ is the tangent vector to the curve $x(\cdot)$ at $0$. We shall use this property 
+%to calculate the gradient of $\Phi$.
+
+Let ${F_2}(t)$ and ${F_3}(t)$ be arbitrary curves on $Gr(d_2, r_2)$
+and $Gr(d_3, r_3)$, $\Delta_2$ and $\Delta_3$ be the corresponding tangent
+vectors at $t = 0$.
+If we derive the representation of $\frac{d \Phi(F_2(t), F_3(t))}{dt} \rvert_{t = 0}$ in the form
+$\langle \Delta, \Theta \rangle$, where $\Delta$ is a tangent vector
+to the curve $t \mapsto (F_2(t), F_3(t))$ on $St(d_2, r_2) \times St(d_3, r_3)$ 
+at $t = 0$, then the vector $\Theta$ will be the formal gradient of $\Phi$.
+Since the tangent space to the product of two Riemannian manifolds is
+isomorphic to the product of tangent spaces (as Euclidean spaces), we
+have $\Delta = (\Delta_2, \Delta_3)$, $\Theta = (\Theta_2, \Theta_3)$
+and $\langle \Delta, \Theta \rangle = \langle \Delta_2, \Theta_2 \rangle + 
+\langle \Delta_3, \Theta_3 \rangle $.
+
+
+%\begin{equation}
+%\frac{d}{dt}\left(A \times _k X(t) \times _m {F_2}(t) \right) = A \times_k \frac{d}{dt}(X(t)) \times _m {F_2}(t) + A \times_k  X(t) \times _m \frac{d}{dt}({F_2}(t))
+%\end{equation}
+%Here $A$ is a constant tensor and $X(t)$ and ${F_2}(t)$ are matrix-valued functions of $A$.
+
+Using the Leibniz formula, we obtain
+\begin{eqnarray}
+\frac{d\Phi(F_2(t), F_3(t))} {dt} = \frac{1}{2} \frac{d}{dt} \langle \A \times_2 F_2(t) \times_3 F_3(t) \rangle  \\
+= \langle \A \times_2 \Delta_2 \times_3 F_3, \A \times_2 F_2 \times_3 F_3 \rangle +  \langle \A \times_2 F_2 \times_3 \Delta_3 , \A \times_2 F_2 \times_3 F_3 \rangle 
+\end{eqnarray}
+
+Let
+\begin{equation}
+\G:= \A \times_2 {F_2} \times_3 {F_3}.
+\end{equation}
+
+Using formulae from \cite{elden_savas_2009}, we get
+
+\begin{eqnarray}
+\langle \A \times_2 \Delta{_2} \times_3 {F_3}, F \rangle = \langle \Delta{_2}, \langle  \A \times_3 {F_3}, F \rangle _{-2} \rangle, \\
+\langle \A \times_2 {F_2} \times_3 \Delta{_3}, F \rangle = \langle \Delta{_3}, \langle  \A \times_2 {F_2}, F \rangle _{-3} \rangle.
+\end{eqnarray}
+
+This shows that the formal gradient of $\Phi$ consists of two components $(\Phi_2, \Phi_3)$
+given by
+
+\begin{eqnarray}
+\Phi{_2} := \langle  \A \times_3 {F_3}, F \rangle _{-2}
+\Phi{_3} := \langle  \A \times_2 {F_2}, F \rangle _{-3}
+\end{eqnarray}
+
+Now we need to project to get $\Phi$, the $\Phi_2$ component is projected to $T_{F_2}Gr(d_2, r_2)$ and
+the $\Phi_3$ component is projected to $T_{F_3}Gr(d_3, r_3)$. Omitting the intermediate calculations,
+we give the final result ($\Pi_i$ stands for $\Pi_{F_i}$ ):
+
+\begin{equation}
+\nabla \Phi = 
+\begin{pmatrix}
+\Pi{_2} \Phi{_2} \\
+\Pi{_3} \Phi{_3}
+\end{pmatrix} 
+=
+\begin{pmatrix}
+\langle \A \times_3 {F_3}, \A \times_3 {F_3} \rangle_{-2}{F_2} - {F_2} \langle F, F \rangle_{-2} \\
+\langle \A \times_2 {F_2}, \A \times_2 {F_2} \rangle_{-3} {F_3} - {F_3} \langle F, F \rangle_{-3}
+\end{pmatrix}
+\end{equation}
+
+Next step is to compute the Hessian $H$. Since $\Phi$ is defined on the product
+of two manifolds, the Hessian $H$ has the block structure
+\begin{equation}
+    H = \begin{pmatrix}
+        H_{2,2} & H_{2,3} \\
+        H_{3,2} & H_{3,3} \\
+    \end{pmatrix}
+\end{equation}
+Here $H_{i,j}$ is a linear operator from $T_{F_i}Gr(d_i, r_i)$ to $T_{F_j}Gr(d_j, r_j)$.
+Since $H$ is a self-adjoint operator, $H_{2,3} = H_{3,2}'$.
+
+
+We again start from computing Hessian
+w.r.t. elements of $F_2$ and $F_3$, then we shall need to apply projection 
+operator to get $H$. From standard calculus in $\R^n$ we know that
+Hessian can be characterized as the linear operator $H$ such that
+\begin{equation}
+\frac{d^2 \Phi(F_2(t), F_3(t))}{dt} \rvert_{t = 0} = \langle \Delta, H \Delta \rangle.
+\end{equation}
+Calculate the second derivative of $\Phi(F_2(t), F_3(t))$:
+\begin{eqnarray*}
+\frac{d^2 \Phi}{dt^2} = \langle \A \times_2 \Delta{_2} \times_3 {F_3}, \A \times_2 \Delta{_2} \times_3 {F_3} \rangle 
++ \langle \A \times_2 \Delta{_2} \times_3 {F_3}, \A \times_2 {F_2} \times_3 \Delta{_3} \rangle \\
++ \langle \A \times_2 \Delta{_2} \times_3 \Delta{_3}, F \rangle 
++ \langle \A \times_2 {F_2} \times_3 \Delta{_3}, \A \times_2 \Delta{_2} \times_3 {F_3} \rangle \\ 
++ \langle \A \times_2 {F_2} \times_3 \Delta{_3}, \A \times_2 {F_2}  \times_3 \Delta_{F_3} \rangle 
++ \langle \A \times_2 \Delta{_2} \times_3 \Delta{_3}, F \rangle 
+\end{eqnarray*}
+
+Consider the $(2,2)$-term:
+
+\begin{eqnarray*}
+\langle \A \times_2 \Delta{_2} \times_3 {F_3}, \A \times_2 \Delta{_2} \times_3 {F_3} \rangle \\
+= \langle \Delta{_2}, \langle \A \times_3 {F_3}, \A \times_2 \Delta{_2} \times_3 {F_3} \rangle_{-2} \rangle \\
+ = \langle \Delta{_2}, \langle \A \times_3 {F_3}, \A  \times_3 {F_3} \rangle_{-2} \Delta{_2} \rangle
+\end{eqnarray*}
+
+This gives the $(2,2)$-term of the Hessian in operator form:
+
+\begin{equation}
+H_{2,2}(\Delta{_2}) = \Pi{_2} \langle \A \times_3 {F_3}, \A \times_3 {F_3} \rangle_{-2} \Delta{_2} - \Delta{_2} {F_2}^T \Phi{_2}
+\end{equation}
+
+In the same way the $(3,3)$-term is
+
+\begin{equation}
+{H}_{3,3}(\Delta{_3}) = \Pi{_3} \langle \A \times_2 {F_2}, \A \times_2 {F_2} \rangle_{-3} \Delta{_3} - \Delta{_3} {F_3}^T \Phi{_2}
+\end{equation}
+
+The $(2,3)$-term is a bit more tricky to compute.
+
+\begin{equation}
+H_{2,3}(\Delta{_3}) = \Pi{_2} \left( \langle  \langle \A, F \rangle_{-(2,3)}, \Delta{_3} \rangle_{2,4;1,2}    
++ \langle \langle \A \times_3 {F_3}, \A \times_2 {F_2} \rangle_{-(2,3)}, \Delta{_3} \rangle_{4,2;1:2} \right)
+\end{equation}
+
+Until now it was sufficient to work with $T_F Gr(d,r)$ as a subspace of  $\R^{d \times r}$.
+However, the elements of $\Delta_2$, $\Delta_3$ are not linearly independent:
+the condition $F_i^T \Delta_i = 0$ imposes additional linear constraints,
+so it would be unwise to use the elements of these matrices as unknowns
+in the final system of equations. We want a non-singular system
+with the same number of equations and unknowns. There is a more explicit description
+of $T_F Gr(d, r)$ that allows us to do this.  For a $d \times r$ ($d > r$) matrix
+$F$ we can always find a (non-unique) matrix $F_{\bot}$ such that $[ F F_{\bot} ]$
+is an orthogonal $d \times d$ matrix (in more geometric terms, we extend the orthonormal
+basis of the subspace to the ortonormal basis of the whole space). It turns out that
+$\Delta = F^{\bot} D$, $D \in \R^{(d-r) \times r}$ is the appropriate parametrization
+of $T_F Gr(d, r)$.
+
+Let us fix some
+$F_{2}^{\bot}$ and $F_3^{\bot}$. Then, for $D_i \in \R^{(d_i - r_i) \times r_i}$
+we have
+\begin{eqnarray}
+\Delta{_2} = {F_2}_{\bot} D{_2}
+\Delta{_3} = {F_3}_{\bot} D{_3}
+\end{eqnarray}
+
+We can substitute these expressions
+for $\Delta_i$ into the formulas for $\nabla \Phi$ and $H(\Phi)$
+and this yields the final formulas for the matrix of the system
+and its right-hand side.
+
+
+%\begin{equation}
+%\hat{\mathcal{H}}(D) = \begin{pmatrix}
+%{F_2}_{\bot}^T  & 0 \\
+%0 & {F_3}^T_{\bot} 
+%\end{pmatrix} \begin{pmatrix}
+%\mathcal{H}_{yy}(\Delta{_2}) + \mathcal{H}_{2,3}(\Delta{_3}) \\
+%\mathcal{H}_{zy}(\Delta{_2}) + \mathcal{H}_{zz}(\Delta{_3})
+%\end{pmatrix}
+%\end{equation}
+
+\begin{equation}
+\hat{{H}}_{2,2}(D{_2}) = \langle \hat{B}{_2}, \hat{B}{_2} \rangle_{-2} D{_2} - D{_2} \langle F, F \rangle _{-2}
+\end{equation}
+
+\begin{equation}
+\hat{{H}}_{3,3}(D{_3}) = \langle \hat{B}{_3}, \hat{B}{_3} \rangle_{-3} D{_3} - D{_3} \langle F, F \rangle _{-3}
+\end{equation}
+
+Here
+\begin{eqnarray}
+\hat{B}{_2} = \A \times_2 {F_2}_{\bot} \times_3 {F_3}
+\hat{B}{_3} = \A \times_2 {F_2} \times_3 {F_3}_{\bot}
+\end{eqnarray}
+
+
+\begin{equation}
+\hat{{H}}_{2,3}(D{_3}) = \langle \langle \hat{C}_{2,3}, F \rangle_{-(2,3)} D{_3} \rangle_{2,4;1:2} + \langle \langle \hat{B}_{2}, \hat{B}_{2,3} \rangle_{-(2,3)} D{_3} \rangle_{4,2;1:2}
+\end{equation}
+Here
+\begin{equation}
+    \hat{C}_{2,3} = \A \times_2 F_{2 \bot} \times_3 F_{3 \bot}
+\end{equation}
+
+The gradient expressed in terms of $D_2$, $D_3$ is
+\begin{equation}
+\nabla \hat{\Phi} = \begin{pmatrix}
+{F_2}_{\bot}^T & 0 \\
+0 & {F_3}^T_{\bot} 
+\end{pmatrix} \begin{pmatrix}
+\Pi_{{F_2}}\Phi{_2} \\
+\Pi_{F_3} \Phi{_3}
+\end{pmatrix}
+\end{equation}
+
+We now have the linear system 
+\begin{equation}
+\hat{{H}}(D{_2}, D{_3}) = -\nabla \hat{\Phi}
+\end{equation}
+with unknown matrices $D{_2}$ and $D{_3}$. In order to solve this system
+we need to vectorize it.
+
+The standard rules for vectorization are
+\begin{eqnarray*}
+\vect(AX) = (I \otimes A) \vect(X) \\
+\vect(XA) = (A \otimes I) \vect(X)
+\end{eqnarray*}
+
+These rules are applicable to the diagonal elements of $\hat{\mathcal{H}}$. The offidiagonal element
+is of the form
+\begin{equation}
+\langle A, X \rangle _{2,4;1:2} + \langle B, X \rangle_{4,2;1:2}
+\end{equation}
+It can be verified that the vectorization of this operator is
+\begin{equation}
+\A^{(1,3;2,4)} \vect{X} + \A^{(1,3;4,2)} \vect{X}
+\end{equation}
+
+
+
+Newton-Grassmann method did not work well. If step size was fixed,
+it started to diverge fast. If step size was optimised (original
+Matlab code provided by authors was used, where you can choose
+optimal value for step size at each iteration), it gave slightly
+better result in terms of Frobenius norm than HOSVD. One reason
+for that can be bad initialisation. It was recommended to use
+HOSVD factor matrices for initial values, however, the Hessian
+of the optimised function in that case was not positive-definite.
+As documentation to the code states, this indicates that in our particular case we start too far from the critical point.
+The authors suggest that one can simply replace negative eigenvalues
+in the Hessian by their absolute values, but this is only an empirical rule.
+
