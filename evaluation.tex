@@ -1,19 +1,12 @@
 \chapter{Evaluation}
 
+
+
+
 \section{Implementation details}
-We  implemented the numerical methods in C++ using the existing framework 
-of Bolkart and Wuhrer (\cite{bolkart_wuhrer_2013}).
-The implementation was done with Armadillo library.
-The differential-geometric Newton method was implemented in Matlab. 
-We used tensor toolbox for this.
-The code for fitting was provided as part of the framework. The code for 
-expression recognition was taken from Daniel Mohr's thesis
-(it had to be changed to work with full scans instead of their subset
-that corresponds to Kinect landmarks).
 
 
-
-Even though the authors of \cite{elden_savas_2009}
+Even though the authors of \cite{elden_savas_2007}
 and \cite{IDLAVH09} provide the implementation 
 of their methods in form of Matlab code,
 it was necessary to reimplement this for two reasons.
@@ -42,6 +35,18 @@ Third, if some of this methods proved to be much more
 efficient than HOOI, it would be necessary to integrate 
 them into existing framework written in C++.
 
+We  implemented the numerical methods in C++ using the existing framework 
+of Bolkart and Wuhrer (\cite{bolkart_wuhrer_2013}).
+The implementation was done with Armadillo library.
+The differential-geometric Newton method was implemented in Matlab. 
+We used tensor toolbox for this.
+The code for fitting was provided as part of the framework. The code for 
+expression recognition was taken from Daniel Mohr's thesis
+(it had to be changed to work with full scans instead of their subset
+that corresponds to Kinect landmarks).
+
+
+
 \section{Protocol}
 
 All experiments were conducted on the BU-3DFE database. The database contains $2,500$ scans of faces. There are $100$
@@ -63,8 +68,8 @@ were averaged.
 \section{Frobenius norm}
 
 The simplest measure of comparing different methods
-is calculating the Frobenius norm of the residue $|| X - M \times_2 F_2 \times_3 F_3 ||$.
-The average values of Frobenius norm are given in {Table \ref{frob-norm-residue}}:
+is calculating the Frobenius norm of the residual $|| X - M \times_2 F_2 \times_3 F_3 ||$.
+The average values of Frobenius norm are given in {Table \ref{frob-norm-residual}}:
 
 
 \begin{table}[h]
@@ -72,10 +77,10 @@ The average values of Frobenius norm are given in {Table \ref{frob-norm-residue}
 \begin{tabular}{|l|l|l|l|}
 \hline
 HOSVD & HOOI & NG & DGN \\ \hline
-$11,052.6$  & $10,756.2$  & $10,755.8$ & $10,755.9$ \\ \hline
+$11,756.3$  & $11,475.02$  & $11,475.0$ & $11,475.0$ \\ \hline
 \end{tabular}
-\caption{Values of the Frobenius norm of the residue}
-\label{frob-norm-residue}
+\caption{Values of the Frobenius norm of the residual. NG stands for Newton-Grassmann method, DGN stands for Differential-Geometric Newton Method.}
+\label{frob-norm-residual}
 \end{table}
 
 
@@ -120,10 +125,10 @@ Comparing running time.
 \begin{tabular}{|l|l|l|l|}
 \hline
 HOSVD & HOOI & NG & DGN \\ \hline
-$11,052.6$  & $10,756.2$  & $10,755.8$ & $10,755.9$ \\ \hline
+$30$  & $35$  & $120$ & $3,600$ \\ \hline
 \end{tabular}
-\caption{Values of the Frobenius norm of the residue}
-\label{frob-norm-residue}
+\caption{Values of the Frobenius norm of the residual}
+\label{running_time_per_iteration}
 \end{table}
 
 
@@ -132,33 +137,54 @@ We can also visualize this approximation error at each pixel:
 \begin{figure}
         \centering
         \begin{subfigure}[b]{0.6\textwidth}
-                \includegraphics[width=\textwidth]{hooi_avg_face.jpg}
+                \includegraphics[width=\textwidth]{images/hooi_avg_face.jpg}
                 \caption{HOOI}
-                \label{HOOI}
+                \label{HOOI_face}
         \end{subfigure}%
         ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
           %(or a blank line to force the subfigure onto a new line)
         \begin{subfigure}[b]{0.55\textwidth}
-                \includegraphics[width=\textwidth]{hosvd_avg_face.jpg}
+                \includegraphics[width=\textwidth]{images/hosvd_avg_face.jpg}
                 \caption{HOSVD}
-                \label{HOSVD}
+                \label{HOSVD_face}
         \end{subfigure}
         \caption{Average error per point for HOOI and HOSVD models}
         \label{fig:hooi_hosvd_comparison}
 \end{figure}
-// figures
 
 We see that HOOI gives some improvement 
 , but the difference is not that big. On the other hand, if we compare the 
 gradients of the cost function, we see that the result of HOOI is much closer to the 
 critical point:
 
-// table : Method | Value of gradient
+\begin{figure}
+        \centering
+                \includegraphics[width=8cm]{images/hooi_gradient_plot.jpg}
+        \caption{Relative norm of the gradient (logarithmic scale).}
+        \label{fig:hooi_grad_plot}
+\end{figure}
 
 
-// table 
+
+\begin{figure}
+        \centering
+                \includegraphics[width=8cm]{images/hooi_hosvd_residual_plot.jpg}
+        \caption{Norm of the residual for HOOI, starting with HOSVD.}
+        \label{fig:hooi_hosvd_resid_plot}
+\end{figure}
+
+
+
+
+\begin{figure}
+        \centering
+                \includegraphics[width=8cm]{images/hooi_residual_plot.jpg}
+        \caption{Norm of the residual for HOOI.}
+        \label{fig:hooi_resid_plot}
+\end{figure}
 
 \section{Reconstruction and Fitting}
+\label{eval_fit}
 The more application-relevant measure is fitting error: we take face scans
 from test dataset and try to fit them to the model. After that we measure the difference
 between reconstructed face and the original scan (at points where we have found correspondence).
@@ -179,14 +205,93 @@ one, because we require more from our reconstruction.
 
 \section{Expression Recognition}
 
-The expresion recognition test was performed using the method of Mpiperis et al (\cite{?}).
+The expression recognition test was performed using the method similar to that of Mpiperis et al (\cite{?}).
 The first step is to train the multilinear model and then reconstruct
 the scans from the training dataset using this model (that is, to compute 
-$X \times_2 V \times_3 W$).  The input scan $f$ from the testing dataset
+$\X \times_2 F_2 \times_3 F_3$).  The input scan $\f$ from the testing dataset
 is then registered using the multilinear model, too:
 \begin{equation}
     f \approx \mu + X \times_2 w_2 \times_3 w_3 =: f_r.
 \end{equation}
-Then the nearest neighbour classifier is used to determine the expression
-of $f$.
 
+
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|l|l|l|l|}
+\hline
+& Angry & Disgust & Fear & Happy & Sad & Surprised \\ \hline
+Angry     & 210 &  70 &  14 &  4 &  102 &  0   \\ \hline
+Disgust   & 76 &  264 &  22 &  15 &  15 &  8   \\  \hline
+Fear      & 53 &  190 &  93 &  15 &  20 &  29   \\ \hline
+Happy     & 15 &  186 &  112 &  81 &  3 &  3   \\  \hline
+Sad       & 143 &  62 &  8 &  3 &  184 &  0   \\   \hline
+Surprised & 83 &  124 &  27 &  1 &  52 &  113  \\ \hline
+\end{tabular}
+\caption{Confusion matrix for expression recognition, HOSVD }
+\label{expr_rec_hosvd_confmatr}
+\end{table}
+
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|l|l|l|l|}
+\hline
+& Angry & Disgust & Fear & Happy & Sad & Surprised \\ \hline
+Angry     & 253 &  58 &  25 &  6 &  58 &  0   \\  \hline
+Disgust   & 90 &  262 &  18 &  15 &  11 &  4   \\  \hline
+Fear      & 64 &  178 &  99 &  19 &  13 &  27   \\ \hline
+Happy     & 18 &  172 &  112 &  95 &  1 &  2   \\  \hline
+Sad       & 199 &  43 &  9 &  1 &  146 &  2   \\   \hline
+Surprised & 118 &  121 &  43 &  1 &  30 &  87  \\\hline
+\end{tabular}
+\caption{Confusion matrix for expression recognition, HOOI }
+\label{expr_rec_hooi_confmatr}
+\end{table}
+
+
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|l|l|l|l|}
+\hline
+& Angry & Disgust & Fear & Happy & Sad & Surprised \\ \hline
+Angry     & 254 &  55 &  25 &  4 &  62 &  0 \\    \hline
+Disgust   & 87 &  264 &  17 &  14 &  12 &  6 \\    \hline
+Fear      & 69 &  174 &  100 &  19 &  11 &  27 \\ \\hline
+Happy     & 18 &  170 &  115 &  94 &  1 &  2 \\    \hline
+Sad       & 200 &  47 &  10 &  1 &  140 &  2 \\    \hline
+Surprised & 119 &  121 &  42 &  0 &  32 &  86 \\  \hline
+\end{tabular}
+\caption{Confusion matrix for expression recognition, Newton-Grassmann}
+\label{expr_rec_newgr_confmatr}
+\end{table}
+
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|l|l|l|l|}
+\hline
+& Angry & Disgust & Fear & Happy & Sad & Surprised \\ \hline
+Angry     & 254 &  54 &  23 &  5 &  64 &  0 \\  \hline
+Disgust   & 83 &  268 &  15 &  15 &  11 &  8 \\  \hline
+Fear      & 70 &  173 &  96 &  21 &  13 &  27 \\ \hline
+Happy     & 19 &  169 &  117 &  91 &  1 &  3 \\  \hline
+Sad       & 201 &  44 &  12 &  1 &  140 &  2 \\  \hline
+Surprised & 118 &  116 &  45 &  1 &  35 &  85 \\ \hline
+\end{tabular}
+\caption{Confusion matrix for expression recognition, Differential-Geometric Newton}
+\label{expr_rec_dg_newton_confmatr}
+\end{table}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|l|l|l|l|}
+\hline
+& HOSVD & HOOI & NG & DGN \\ \hline
+Correctly classified & $945$  & $942$  & $938$ & $934$ \\ \hline
+Classification rate& $39.37$  & $39.25$  & $39.08$ & $37.36$ \\ \hline
+\end{tabular}
+\caption{Expression recognition rate, comparison}
+\label{expr_rec_rate_total}
+\end{table}

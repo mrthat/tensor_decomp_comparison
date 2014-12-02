@@ -1,4 +1,4 @@
-\subsection{Newton-Grassmann method}
+\section{Newton-Grassmann method}
 
 This method was introduced by Elden and Savas. 
 The general scheme of the method is as follows.
@@ -16,21 +16,19 @@ $\Delta \in T_pM$ that satisfies the equation
     H(\Phi)_p(\Delta) = - \nabla \Phi(p).
 \end{equation}
 This vector defines the geodesic curve $t \mapsto \gamma(t)$ on $M$,
-we move along it to find the next approximation to the solution,
+and we move along it to find the next approximation to the solution,
 \begin{equation}
 p_{+} = \gamma(1).
 \end{equation}
 
 
 The manifold on which the method by Elden and Savas works is the product
-of \textit{Grassmann manifolds}, and we start with definition and basic properties
-of this manifold.  Let $k \leq n$ be positive integers. We interpret the manifold $St(n, k)$
+of \textit{Grassmann manifolds}, and we start with its definition and basic properties.  Let $k \leq n$ be positive integers. We interpret the manifold $St(n, k)$
 of $n \times k$ matrices with orthonormal columns
 as the set of orthonormal basises of $k$-dimensional subspaces
 of $\R^n$. Two matrices $X$ and $Y$ represent the same subspace,
 if there exists an orthogonal $k \times k$ matrix $U$ such that
-$X = YU$. This defines an equivalence relation $\sim$ on $St(n, k)$, and the conditions
-of the quotient manifold theorem are fulfilled. The quotient $St(n, k)/ \sim$ is called
+$X = YU$. This defines an equivalence relation $\sim$ on $St(n, k)$. The quotient $St(n, k)/ \sim$ is called
 Grassmann manifold and denoted $Gr(n, k)$.
 Let $[X] \in Gr(n,k)$ be an equivalence class of matrix $X$.
 It is known that the tangent
@@ -57,7 +55,7 @@ The canonical inner product in $T_X Gr(n, k)$ is defined by
 \end{equation}
 Equipped with this inner product, $Gr(n, k)$ becomes a Riemannian
 manifold. The formula
-for the geodesic curve that passes through $X$ and has at this point tangent 
+for the geodesic curve that passes through $X$ at $t = 0$ and has at this point tangent 
 vector $\Delta$ is 
 \begin{equation}
     X_{\Delta}(t) = XV \cos (t \Sigma) V^T + U \sin(t \Sigma) V^T,
@@ -74,7 +72,7 @@ symmetry property
     \forall U \in O(k) \quad F(XU) = F(X).
 \end{equation}
 Since $St(n,k)$ can be identified with the subset of $\R^{nk}$, we can compute
-the formal gradient of $F$ by taking partial derivatives of $F$
+the \textit{formal gradient} of $F$ by taking partial derivatives of $F$
 with respect to all entries of the argument $X$. Let this gradient
 be $F_X(X)$, then the gradient of $F$ as a function on Grassmannian
 is computed by projecting:
@@ -85,7 +83,7 @@ is computed by projecting:
 We noticed before that the objective function in Tucker2 decomposition 
 problem
 \begin{equation}
-\Phi(Y,Z) = \frac{1}{2} \| \A \times _{2} Y \times _{3} Z \| 
+\Phi(F_2,F_3) = \frac{1}{2} \| \A \times _{2} F_2 \times _{3} F_3 \| 
 \end{equation}
 satisfies the symmetry property \eqref{sym_grass} w.r.t. both arguments,
 so we can interpret it as a function on $M = Gr(d_2, r_2) \times Gr(d_3, r_3)$.
@@ -103,7 +101,7 @@ $\langle \Delta, \Theta \rangle$, where $\Delta$ is a tangent vector
 to the curve $t \mapsto (F_2(t), F_3(t))$ on $St(d_2, r_2) \times St(d_3, r_3)$ 
 at $t = 0$, then the vector $\Theta$ will be the formal gradient of $\Phi$.
 Since the tangent space to the product of two Riemannian manifolds is
-isomorphic to the product of tangent spaces (as Euclidean spaces), we
+isomorphic to the product of tangent spaces (as inner product spaces), we
 have $\Delta = (\Delta_2, \Delta_3)$, $\Theta = (\Theta_2, \Theta_3)$
 and $\langle \Delta, \Theta \rangle = \langle \Delta_2, \Theta_2 \rangle + 
 \langle \Delta_3, \Theta_3 \rangle $.
@@ -115,17 +113,20 @@ and $\langle \Delta, \Theta \rangle = \langle \Delta_2, \Theta_2 \rangle +
 %Here $A$ is a constant tensor and $X(t)$ and ${F_2}(t)$ are matrix-valued functions of $A$.
 
 Using the Leibniz formula, we obtain
-\begin{eqnarray}
-\frac{d\Phi(F_2(t), F_3(t))} {dt} = \frac{1}{2} \frac{d}{dt} \langle \A \times_2 F_2(t) \times_3 F_3(t) \rangle  \\
-= \langle \A \times_2 \Delta_2 \times_3 F_3, \A \times_2 F_2 \times_3 F_3 \rangle +  \langle \A \times_2 F_2 \times_3 \Delta_3 , \A \times_2 F_2 \times_3 F_3 \rangle 
-\end{eqnarray}
+\begin{equation}
+\begin{split}
+\frac{d\Phi(F_2(t), F_3(t))} {dt} &= \frac{1}{2} \frac{d}{dt} \langle \A \times_2 F_2(t) \times_3 F_3(t), \A \times_2 F_2(t) \times_3 F_3(t) \rangle   \\
+ &= \langle \A \times_2 \Delta_2 \times_3 F_3, \A \times_2 F_2 \times_3 F_3 \rangle  \\ 
+ & +  \langle \A \times_2 F_2 \times_3 \Delta_3 , \A \times_2 F_2 \times_3 F_3 \rangle 
+ \end{split}
+\end{equation}
 
 Let
 \begin{equation}
-\G:= \A \times_2 {F_2} \times_3 {F_3}.
+\G := \A \times_2 {F_2} \times_3 {F_3}.
 \end{equation}
 
-Using formulae from \cite{elden_savas_2009}, we get
+Using formulae from \cite{elden_savas_2007}, we get
 
 \begin{eqnarray}
 \langle \A \times_2 \Delta{_2} \times_3 {F_3}, F \rangle = \langle \Delta{_2}, \langle  \A \times_3 {F_3}, F \rangle _{-2} \rangle, \\
@@ -136,7 +137,8 @@ This shows that the formal gradient of $\Phi$ consists of two components $(\Phi_
 given by
 
 \begin{eqnarray}
-\Phi{_2} := \langle  \A \times_3 {F_3}, F \rangle _{-2}
+\label{formal_grad_phi}
+\Phi{_2} := \langle  \A \times_3 {F_3}, F \rangle _{-2} \\
 \Phi{_3} := \langle  \A \times_2 {F_2}, F \rangle _{-3}
 \end{eqnarray}
 
@@ -145,6 +147,7 @@ the $\Phi_3$ component is projected to $T_{F_3}Gr(d_3, r_3)$. Omitting the inter
 we give the final result ($\Pi_i$ stands for $\Pi_{F_i}$ ):
 
 \begin{equation}
+\label{grad_tucker2}
 \nabla \Phi = 
 \begin{pmatrix}
 \Pi{_2} \Phi{_2} \\
@@ -165,7 +168,7 @@ of two manifolds, the Hessian $H$ has the block structure
         H_{3,2} & H_{3,3} \\
     \end{pmatrix}
 \end{equation}
-Here $H_{i,j}$ is a linear operator from $T_{F_i}Gr(d_i, r_i)$ to $T_{F_j}Gr(d_j, r_j)$.
+Here $H_{i,j}$ is a linear operator from $T_{F_j}Gr(d_j, r_j)$ to $T_{F_i}Gr(d_i, r_i)$.
 Since $H$ is a self-adjoint operator, $H_{2,3} = H_{3,2}'$.
 
 
@@ -220,7 +223,7 @@ so it would be unwise to use the elements of these matrices as unknowns
 in the final system of equations. We want a non-singular system
 with the same number of equations and unknowns. There is a more explicit description
 of $T_F Gr(d, r)$ that allows us to do this.  For a $d \times r$ ($d > r$) matrix
-$F$ we can always find a (non-unique) matrix $F_{\bot}$ such that $[ F F_{\bot} ]$
+$F$ with orthonormal columns we can always find a (non-unique) matrix $F^{\bot}$ such that $[ F \, F_{\bot} ]$
 is an orthogonal $d \times d$ matrix (in more geometric terms, we extend the orthonormal
 basis of the subspace to the ortonormal basis of the whole space). It turns out that
 $\Delta = F^{\bot} D$, $D \in \R^{(d-r) \times r}$ is the appropriate parametrization
@@ -230,8 +233,8 @@ Let us fix some
 $F_{2}^{\bot}$ and $F_3^{\bot}$. Then, for $D_i \in \R^{(d_i - r_i) \times r_i}$
 we have
 \begin{eqnarray}
-\Delta{_2} = {F_2}_{\bot} D{_2}
-\Delta{_3} = {F_3}_{\bot} D{_3}
+\Delta{_2} = {F_2}^{\bot} D{_2} \\
+\Delta{_3} = {F_3}^{\bot} D{_3}
 \end{eqnarray}
 
 We can substitute these expressions
@@ -306,18 +309,3 @@ It can be verified that the vectorization of this operator is
 \begin{equation}
 \A^{(1,3;2,4)} \vect{X} + \A^{(1,3;4,2)} \vect{X}
 \end{equation}
-
-
-
-Newton-Grassmann method did not work well. If step size was fixed,
-it started to diverge fast. If step size was optimised (original
-Matlab code provided by authors was used, where you can choose
-optimal value for step size at each iteration), it gave slightly
-better result in terms of Frobenius norm than HOSVD. One reason
-for that can be bad initialisation. It was recommended to use
-HOSVD factor matrices for initial values, however, the Hessian
-of the optimised function in that case was not positive-definite.
-As documentation to the code states, this indicates that in our particular case we start too far from the critical point.
-The authors suggest that one can simply replace negative eigenvalues
-in the Hessian by their absolute values, but this is only an empirical rule.
-

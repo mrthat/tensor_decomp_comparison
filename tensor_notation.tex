@@ -50,7 +50,7 @@ n \not= m \Rightarrow (\A \times _n B) \times_m C = (\A \times _m C) \times_n B.
 \begin{equation}
 (\A \times_n B) \times_n C = \A \times_n (BC).
 \end{equation}
-\item Orthogonal factors preserver Frobenius norm:
+\item Orthogonal factors preserve Frobenius norm:
 
 \begin{equation}
 \label{orthogonal_norm_inv}
@@ -58,7 +58,7 @@ S \in O(I_k)  \Rightarrow \| \A \times_k S \| = \| \A \|.
 \end{equation}
 \end{enumerate}
 
-There is a natural way of transforming tensor $\X \in R^{I_1 \times I_2 \times \cdots \times I_N}$ into a matrix: choose one mode $n$
+There is a natural way of transforming a tensor $\X \in R^{I_1 \times I_2 \times \cdots \times I_N}$ into a matrix: choose one mode $n$
 and arrange all mode-$n$ fibers into a matrix in a natural order. More formally,
 the unfolding in mode $n$ is an $I_n \times \prod_{k \neq n} I_k$ matrix such that
 the element $X_{i_1 \dots i_N}$ is mapped to the row $i_n$ and column $j = 1 + \sum_{ k \neq n} (i_k - 1) J_k$,
@@ -139,52 +139,52 @@ we want to store only $\G \in \R^{r_1 \times r_2 \times r_3}$, where $r_k \leq d
 The compression is performed by applying projections to a lower-dimensional
 space in each mode, so that
 \begin{equation}
-    \G = \X \times_1 F_1 \times_2 F_2 \times_3 F_3, \quad F_i \in \R^{r_i \times d_i}.
+    \G = \A \times_1 F_1 \times_2 F_2 \times_3 F_3, \quad F_i \in \R^{r_i \times d_i}.
 \end{equation}
 Though it  is not necessary to impose any constraints on the  projection matrices $F_i$,
 it is usually assumed that they have orthonormal columns. In this case it is
-easy to restore the approximate version of $\X$ from $G$:
+easy to restore the approximate version of $\A$ from $G$:
 \begin{equation}
     X \approx G \times _{1} F_1^T \times _{2} F_2^T \times _{3} F_3^T.
 \end{equation}
 This approximation is called Tucker decomposition. 
 As a side remark we notice that there is a specific case of Tucker decomposition
-called CP. The minimal number of components (they are \textit{rank-1 tensors}) needed
-in CP decomposition to exactly represent $\X$ is called \textit{the rank of $\X$},
-finding this rank is an NP-hard problem (\cite{}).
+called CP. The minimal number of components (they are called \textit{rank-1 tensors}) needed
+in CP decomposition to exactly represent $\A$ is called \textit{the rank of $\A$},
+finding this rank is an NP-hard problem (\cite{tensor_rank_np_complete}, \cite{tensors_np_hard}).
 
 
 
 We shall use a variant of Tucker decomposition (known as Tucker2)
 in which we do not compress in mode $1$, so $F_1$ is fixed to be
 identity matrix.  
-The quality of approximation can be measured by the Frobenius norm of the residual $\| \X - \G \times _{1} F^T_1 \times _{2} F^T _2 \times _{3} F^T_3$,
+The quality of approximation can be measured by the Frobenius norm of the residual $\| \A - \G \times _{1} F^T_1 \times _{2} F^T _2 \times _{3} F^T_3 \|$,
 so the best Tucker2 decomposition is a solution of
 the following optimization problem:
 \begin{equation}
     \label{tucker_min}
-\| \X - \G \times_2 F_2^T \times_3 F_3^T \| \to \min
+\| \A - \G \times_2 F_2^T \times_3 F_3^T \| \to \min
 \end{equation}
 where $F_2$ and $F_3$ are matrices with orthonormal columns.
 The following equality holds:
 \begin{equation}
-\label{tucker_min}
+\label{tucker_min_max}
 \begin{split}
-    \| \X - \G \times_2 {F_2^T} \times_3 {F_3^T} \|^2  &= \| \X \|^2 - \| \G \|^2 \\
-                                                       & = \| \X \|^2 - \| \X \times_2 {F_2} \times_3 {F_3} \|^2.
+    \| \A - \G \times_2 {F_2^T} \times_3 {F_3^T} \|^2  &= \| \A \|^2 - \| \G \|^2 \\
+                                                       & = \| \A \|^2 - \| \A \times_2 {F_2} \times_3 {F_3} \|^2.
 \end{split}
 \end{equation}
 In particular, this equality proves that the Frobenius norm
-of the compressed version of $\X$ ('energy') cannot be greater than the norm
-of the original tensor $\X$. It also shows that the best decomposition
+of the compressed version of $\A$ ('energy') cannot be greater than the norm
+of the original tensor $\A$. It also shows that the best decomposition
 is a solution of the maximization problem
 \begin{equation}
 \label{tucker_max}
-\Phi(F_2, F_3) = \frac{1}{2} \| \X \times_2 F_2 \times_3 F_3 \|^2 \to \max.
+\Phi(F_2, F_3) = \frac{1}{2} \| \A \times_2 F_2 \times_3 F_3 \|^2 \to \max.
 \end{equation}
-Since the set of matrices with orthonormal columns is compact,
-this problem is guaranteed to have a solution.
-The property \eqref{orthogonal_norm_inv} implies that
+Since the set of matrices with orthonormal columns is bounded and closed,
+this problem is guaranteed to have a solution by Weierstrass extreme value theorem.
+Property \eqref{orthogonal_norm_inv} implies that
 for all orthogonal matrices $S_2 \in O(d_2)$, $S_3 \in O(d_3)$
 \begin{equation}
     \Phi(F_2 S_2, F_3 S_3) = \Phi(F_2, F_3),
@@ -198,18 +198,23 @@ given by $F_i$ matrices do not matter, it is
 just another choice of the basis in the same subspace.
 
 
+
+We shall discuss methods of computing Tucker2 decomposition in Chapter \ref{alg_chapter}.
+
+
 \section{Multilinear Model}
 
 
 This thesis uses the multilinear model as it is formulated in \cite{bolkart_wuhrer_2013}.
-Suppose that we have a registered set of face scans of different people expressing different
-emotions.
+Suppose that we have a set of registered and spatially aligned 3D face scans of different people expressing different emotions.
 
 The registration process must ensure that all scans have the same number of points
 and these points must be in dense correspondence to each other, otherwise
 it would not make sense to apply statistical methods
 to the data. It is also necessary to have full set of expressions for each 
 person (we do not consider the problem of restoring missing data).
+
+
 
 We can organize these data in a $3$-way tensor. Mode $1$ corresponds
 to coordinates, mode $2$ is identity, and mode $3$ is expression.
@@ -219,7 +224,7 @@ and take this vector as mode-$1$ fiber of the tensor $\Y$. The fibers $\Y(:, i, 
 and $\Y(:, i', j)$ represent different persons with the same expression, the fibers
 $\Y(:, i, j)$ and $\Y(:, i, j')$ are scans of the same person performing different expressions. 
 The tensor $\Y$ has dimensions $d_1$, $d_2$, $d_3$, where $d_1 / 3$ is the number
-of points in each scan, $d_2$ is the number of people, and $d_3$ is a number
+of points in each scan, $d_2$ is the number of people, and $d_3$ is the number
 of expressions.
 
 
@@ -228,10 +233,10 @@ The first step is to calculate the \textit{mean face} $\bmu$,
 \begin{equation}
     \bmu := \frac{1}{d_2 d_3} \sum_{i_2, i_3} \Y(:, i_2, i_3).
 \end{equation}
-Then we subtract $\bmu$ from all mode-$1$ fibers and get a centered tensor $\X$, 
+Then we subtract $\bmu$ from all mode-$1$ fibers and get a centered tensor $\A$, 
 which is compressed using Tucker2 decomposition for some $r_2 < d_2$, $r_3 < d_3$,
 \begin{equation}
-    \X \approx \G \times_2 F_2 \times_3 F_3.
+    \A \approx \G \times_2 F_2^T \times_3 F_3^T.
 \end{equation}
 
 
@@ -247,13 +252,20 @@ with the same expression, by changing $\w_3$ we keep the identity
 and change only the expression. Therefore $\w_2$ is called \textit{identity weights}
 and $\w_3$ is \textit{expression weights}.
 
-If we are given a face scan $\tilde{\f}$, we can look for $\w_2$, $\w_3$ such that
-$\f(\w_2, \w_3)$ is the best approximation  of $\tilde{\f}$. 
+
+Let $\tilde{\f}$ be some face scan. In order to perform \textit{fitting} of $\tilde{\f}$
+to the model, we solve the following optimization problem:
+\begin{equation}
+\mbox{Find $\w_2 \in \R^{r_2}$, $\w_3 \in \R^{r_3}$ that minimize } \rho(\tilde{\f}, \bmu + \G \times_2 \w_2 \times_3 \w_3) \to \min.
+\end{equation}
+The identity and expression weights $\w_2$, $\w_3$ can be regarded as a compact low-dimensional
+representation of $\tilde{\f}$. More details on the optimization and objective function $\rho$
+will be given in Section \ref{eval_fit}.
 
 
 
 As a final remark we note that this model is a generalization of Principal Component 
-Analysis. In PCA we are looking for a subspace projection to which
+Analysis (PCA). In PCA we are looking for a subspace projection to which
 preserves as much variation as possible, that is, we approximate
 the (centered) data with a linear subspace.
 In multilinear model we are looking for two subspaces and perform projection

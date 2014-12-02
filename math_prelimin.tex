@@ -1,5 +1,8 @@
 \section{Mathematical Preliminaries}
 
+In this section we recall some mathematical notions
+we shall need to discuss the last two algorithms, 
+Newton-Grassmann and Differential-Geometric Newton methods.
 
 \subsection{Newton's method}
 
@@ -10,7 +13,17 @@ $f(x) = 0$, $f \colon \R^n \to \R^n$.
 
  Geometrically the idea of the method in one-dimensional case is 
 to move along the tangent lines to the graph of $f$. Analytically this is expressed by the following iterative formula:
-$$ x_{n+1} = x_n - \frac{f(x_n) }{ f'(x_{n})} $$.
+\begin{equation}
+ x_{n+1} = x_n - \frac{f(x_n) }{ f'(x_{n})}. 
+\end{equation}
+
+
+\begin{figure}
+        \centering
+                \includegraphics[width=8cm]{images/newton-image1.png}
+        \caption{Newton's method illustration}
+        \label{fig:hooi_hosvd_comparison}
+\end{figure}
 The method is known to be very fast-convergent (providing that the initial value $x_0$ is close enough to a root).
 In multidimensional case the formula is
 \begin{equation}
@@ -25,13 +38,21 @@ especially if the number of variables is high.
 If we use this method to minimize $F$ by finding the zero of $\nabla F$, then
 we can also interpret this method in terms of $F$. If we approximate $F$
 with its Taylor expansion of degree $2$, then in a neighbourhood 
-of a non-degenerate extremum point the level sets will be ellipses (see Picture ).
+of a non-degenerate extremum point the level sets will be ellipses.
 The gradient is known to be orthogonal to level set, so, if we use gradient descent,
 we may come to the optimum quite slowly, if the ellipses are very elongated.
 The Newton's method involves inverting of $D (\nabla F)$, that is, inverting 
 the Hessian of $F$, which is exactly the quadratic part of the Taylor expansion.
-By inverting it we effectively transform our problem to a coordinate system in which
-the level sets are circular and this allows us to move to the optimum much faster.
+By inverting it we essentially transform our problem to a coordinate system in which
+the level sets are circular and this allows us to move to the optimum much faster (see Figure \ref{fig:newt_grad_comp}).
+
+\begin{figure}
+        \centering
+                \includegraphics[width=4cm]{images/newton_vs_grad_desc.jpg}
+        \caption{Newton's method illustration}
+        \label{fig:newt_grad_comp}
+\end{figure}
+
 
 However, Newton's method is known to behave poorly, if the root is not isolated.
 This is exactly the situation we have in Tucker2 decomposition, where the objective function
@@ -78,7 +99,7 @@ Examples.
         which is a manifold by this remark.
     \item If $M$ is a smooth manifold and there is an equivalence relation $\sim$ on $M$,
         then, under some conditions, the set of equivalence classes $M / \sim$ is 
-        also a manifold (\textit{quotient manifold theorem}.
+        also a manifold (\textit{quotient manifold theorem}, see \cite{lee_manifolds}).
     \item If $M$ and $N$ are smooth manifolds, then $M \times N$ is a smooth
         manifold.
 \end{enumerate}
@@ -86,9 +107,6 @@ Examples.
 
 Let $p$ be an arbitrary point of a smooth manifold $M$. The tangent space at $p$
 is a vector space of the same dimension as $M$ and it is denoted by $T_pM$.
-// picture instead of formal definition
-%If $(x_1, \dots, x_n)$ is a coordinate system in a neighbourhood of $p$,
-%then there is a special basis of $T_pM$, denoted by $\left(\frac{\partial}{\partial x_1}\right)_p, \dots, \left(\frac{\partial}{\partial x_n}\right)_p$.
 Suppose that for each point $p \in M$ we choose one vector $X_p \in T_pM$. 
 This gives us a mapping $X: M \to \cup_{p \in M} T_pM$ called a
 \textit{vector field on $M$}.
@@ -98,10 +116,10 @@ The notion of a tangent space is intuitively clear if we think about something l
 However, if $M$ is an open subset of $\R^n$, the tangent space at each point
 is also $\R^n$.
 \begin{equation}
-    \forall p \in \R^n T_p\R^n = \R^n.
+    \forall p \in \R^n \quad T_p\R^n = \R^n.
 \end{equation}
 We shall often use this in the discussion of Newton methods, because
-it allows us to treat matrix-valued functions of matrix argument $\R^{m \times n} \to \R{m \times n}$
+it allows us to treat matrix-valued functions of matrix argument $\R^{m \times n} \to \R^{m \times n}$
 as vector fields on the manifold of matrices ($\R^{m \times n} \cong \R^{mn}$ as vector spaces).
 
 
@@ -117,7 +135,7 @@ local coordinates is given by the Jacobi matrix. In particular,
 if $f : M \to \R$ is a smooth real-valued function on $M$, its differential at point $p$,
 called \textit{gradient} is a linear functional on $T_pM$,
 so the gradient of a function is not a vector (element of a tangent space),
-but a covector (element of an adjoint space).
+but a covector (element of an adjoint space $(T_pM)^*$).
 
 
 
@@ -125,7 +143,7 @@ If each $T_pM$ is equipped with an inner product
 that changes smoothly as we move along $M$, then $M$ is said to be a Riemannian manifold.
 A smooth curve on $M$ is a smooth mapping $\gamma : [a, b] \rightarrow M$.
 Its differential at point $p \in (a, b)$ is a linear mapping $(D\gamma)(p) : T_p(a,b) \to T_pM$.
-By the previous remark, $T_p(a, b) = T_p \R = \R$, and we can calculate $(D\gamma)(p)[1] \in T_pM$.
+By the previous remark, $T_p(a, b) = T_p \R = \R$, and we can calculate $(D\gamma)_p(1) \in T_pM$.
 This element of $T_pM$ is called \textit{velocity vector}, and we can calculate
 its Euclidean norm using the inner product in $T_pM$. This defines a real-valued function
 on $(a, b)$. By definition, the length of the curve $\gamma$ is the integral
@@ -157,15 +175,15 @@ A cylinder $ \{ (x, y, z) \mid x^2 + y^2 = 1, 0 \leq z \leq 1 \}$
 can be split into disjoint copies of $[0,1]$ (generating lines)
 parameterized by the base $\mathbb{S}^1$,
 so there is one instance of $[0,1]$ attached to each point of the circle.
-A M\"o bius band can also be split into disjoint segments
+A M\"obius band can also be split into disjoint segments
 $[0,1]$ parameterized by $\mathbb{S}^1$. Locally both the cylinder
-and Mobius band are isomorphic to a cartesian product
+and M\"obius band are isomorphic to a cartesian product
 of the arc of a circle and $[0,1]$. The cylinder is, of course,
 isomorphic to the cartesian product not just locally, but globally,
-but it is not the case for the Mobius band, where the trivially
-looking pieces are glued together in a non-trivial way. Both these spaces
+but it is not the case for the M\"obius band, where the trivial
+ pieces are glued together in a non-trivial way. Both these spaces
 are called total spaces of fiber bundles with the base $\mathbb{S}^1$ and fiber $[0,1]$.
-Another example of a fiber bundle is a torus $\mathbb{S^1} \times \mathbb{S}^1$,
+Another example of a fiber bundle is a torus $\mathbb{S}^1 \times \mathbb{S}^1$,
 where both the base and the fiber are circles. 
 
 In general, a fiber bundle is a triple $( \pi, E, B)$, where
@@ -176,7 +194,7 @@ $ \pi \colon E \to B$ is a surjective mapping such that:
     \item Every point $p \in B$ has a neighbourhood $V_p$
     such that $\pi^{-1}(V_p)$ is isomorphic to $V_p \times F$.
 \end{enumerate}
-    The space $E$ is a total space of the bundle, $B$ is a base, and $F$ is a fiber.
+    The space $E$ is a \textit{total space} of the bundle, $B$ is a textit{base}, and $F$ is a \textit{fiber}.
 
 Since the tangent space is a local notion, for each point $p \in E$
 the tangent space at $p$ is isomorphic to a direct product
@@ -189,6 +207,13 @@ one usually thinks of the base positioned horizontally and the fibers
 attached to the base in the orthogonal (that is, vertical) direction,
 therefore the space $T_h$ is called a horizontal space and the space $T_v$
 is called a vertical space.
+
+\begin{figure}
+        \centering
+                \includegraphics[width=8cm]{images/torus_tangent.jpg}
+        \caption{Tangent plane to a fiber bundle}
+        \label{fig:torus_tangent}
+\end{figure}
 
 
 The last notion we shall describe here is \textit{affine connection on a manifold}.
@@ -210,13 +235,11 @@ the following axioms:
 \end{enumerate}
 The field $\nabla_{X} Y$ is called the covariant derivative of $Y$ along $X$.
 This operation is a generalization of differentiation in $\R^n$.
-It plays a central role in differential geometry. If we have 
-
-operation of parallel translation along the curve. Without affine connection
-this would make no sense, given a smooth curve $\gamma : [0,1] \to M$ and a vector
-$v_0 \in T_{\gamma(0)}M$, there is no natural corresponding vector $v_t \in T_{\gamma(t)}M$ for $t > 0$,
-so affine connection 'connects' tangent spaces at different points.
-
-
+It plays a central role in differential geometry,
+capturing the properties of curved spaces. In particular,
+with affine connection it is possible to perform
+parallel translation of a vector along a curve, so
+affine connections 'connect' tangent
+spaces at different points.
 
 
