@@ -1,4 +1,5 @@
-\section{Newton method by de Lathauer and Ishteva}
+\section{Differential-Geometric Newton Method}
+\label{sec_dg_newton}
 
 %// add method from \cite{IDLAVH09}
 Another differential-geometric variant of Newton method
@@ -93,8 +94,9 @@ where
 then the orthogonal projector along $\mathcal{V}_X$, that is, the projection to a horizontal space,
 will be 
 \begin{equation}
-    P^h_X(Y) := Y - Y \skw ((X^TX)^{-1} X^T Y.
+    P^h_X(Y) := Y - Y \skw ((X^TX)^{-1} X^T Y).
 \end{equation}
+Here $\skw(A) = ( 1 / 2) ( A - A^T)$.
 The image of the projector is a \textit{horizontal space}
 \begin{equation}
     \mathcal{H}_X = \im (P^h_X)
@@ -118,7 +120,7 @@ This correspondence preserves zeros and removes degeneracy, and it makes sense
 to apply Newton method to find a zero of $\bar{\xi}$.
 
 
-There is a general scheme for Newton method on a manifold $M$ with affine connection $\nabla$ (\cite{adler_spine}).
+There is a general scheme for Newton method on a manifold $M$ with affine connection $\nabla$ (Adler et al. \cite{adler_spine}).
 Let $\xi$ be a vector field on $M$ and $x$ be a tentative approximate
 solution of $\xi(x) = 0$. To improve $x$, we solve the system 
 \begin{equation}
@@ -169,19 +171,26 @@ Since we work on the product of two quotient manifolds,
 the unknown vector $\Delta$ has two components 
 $\Delta = (\Delta_2, \Delta_3) \in \mathcal{H}_V \times \mathcal{H}_W$, and
 the system to be solved is
-\begin{eqnarray}
-    P^h_V D (P^h_V \Phi_2)(V, W)[\Delta] = - P^h_V \Phi_2(V, W) \\
-    P^h_W D (P^h_W \Phi_3)(V, W)[\Delta] = - P^h_W \Phi_3(V, W). 
-\end{eqnarray}
+\begin{equation}
+\label{dg_newt_system}
+\left\{
+\begin{aligned}
+    P^h_V D (P^h_V \Phi_2)(V, W)[\Delta] & = - P^h_V \Phi_2(V, W) \\
+    P^h_W D (P^h_W \Phi_3)(V, W)[\Delta] & = - P^h_W \Phi_3(V, W) \\
+\end{aligned}
+\right.
+\end{equation}
 Formally this is a system on $\R^{n \times p}_{*}$, but it represents
 a system on the quotient manifold lifted to the total space.
 
 
 We start by computing the horizontal lift $P^h_V\Phi_2$ of the field $\Phi_2$.
-\begin{multline}
- P^h_V( \Phi_2 ) = V R_2 R_2^T - A_{(2)} (W \otimes U) (W \otimes U)^T A_{(2)}^T V \\
- + V \skw( (V^T V)^{-1} V^T A_{(2)} (W \otimes U)(W \otimes U)^T A_{(2)}^T V )
-\end{multline}
+\begin{equation}
+\begin{split}
+ P^h_V( \Phi_2 ) & = V R_2 R_2^T - A_{(2)} (W \otimes U) (W \otimes U)^T A_{(2)}^T V \\
+&  + V \skw( (V^T V)^{-1} V^T A_{(2)} (W \otimes U)(W \otimes U)^T A_{(2)}^T V )
+\end{split}
+\end{equation}
 Now we need to differentiate this expression. We shall use the following properties
 of differential (\cite{matrix_cookbook}):
 \begin{enumerate}
@@ -217,21 +226,23 @@ of differential (\cite{matrix_cookbook}):
 \end{enumerate}
 
 Applying these rules and plugging in the definitions of $R_2$ and $R_3$, we obtain
-\begin{multline}
+\begin{equation}
     \label{diff_p_h_v}
- D(P^h_V \Phi_2) [ \Delta ] = \Delta_2 R_2 R_2^T + V \Delta_2^T A_{(2)} (W \otimes U) R_2^T \\ 
- + V V^T A_{(2)} D ( ( W \otimes U)(W \otimes U)^T ) [\Delta] A_{(2)}^T V \\
-+ V R_2 (W \otimes U)^T A_{(2)}^T \Delta_2  \\
- - A_{(2)} D ( ( W \otimes U)(W \otimes U)^T ) [\Delta] A_{(2)}^T V \\
--  A_{(2)}  ( W \otimes U)(W \otimes U)^T A_{(2)}^T \Delta_2 \\
-+ \Delta_2 \skw ( (V^T V)^{-1} R_2 R_2^T ) \\
-+ V \skw ( - (V^T V)^{-1} ( \Delta_2^T V + V^T \Delta_2) (V^T V)^{-1} R_2 R_2^T) \\ 
-+  V \skw ( (V^T V)^{-1} ( \Delta_2^T A_{(2)} ( W \otimes U) R_2^T + R_2 (W \otimes U)^T A_{(2)}^T \Delta_2 ) ) \\
-+  V \skw ( (V^T V)^{-1} ( V^T A_{(2)} D ( ( W \otimes U)(W \otimes U)^T)[\Delta]  A_{(2)}^T V ) ) 
-\end{multline}
+\begin{split}
+ D(P^h_V \Phi_2) [ \Delta ]  &= \Delta_2 R_2 R_2^T + V \Delta_2^T A_{(2)} (W \otimes U) R_2^T \\ 
+  & + V V^T A_{(2)} D ( ( W \otimes U)(W \otimes U)^T ) [\Delta] A_{(2)}^T V \\
+ & + V R_2 (W \otimes U)^T A_{(2)}^T \Delta_2  \\
+& - A_{(2)} D ( ( W \otimes U)(W \otimes U)^T ) [\Delta] A_{(2)}^T V \\
+& -  A_{(2)}  ( W \otimes U)(W \otimes U)^T A_{(2)}^T \Delta_2 \\
+& + \Delta_2 \skw ( (V^T V)^{-1} R_2 R_2^T ) \\
+& + V \skw ( - (V^T V)^{-1} ( \Delta_2^T V + V^T \Delta_2) (V^T V)^{-1} R_2 R_2^T) \\ 
+& +  V \skw ( (V^T V)^{-1} ( \Delta_2^T A_{(2)} ( W \otimes U) R_2^T + R_2 (W \otimes U)^T A_{(2)}^T \Delta_2 ) ) \\
+& +  V \skw ( (V^T V)^{-1} ( V^T A_{(2)} D ( ( W \otimes U)(W \otimes U)^T)[\Delta]  A_{(2)}^T V ) ) \end{split}
+\end{equation}
+
 It remains to expand
 \begin{equation}
-D( ( W \otimes U)(W \otimes U)^T ) [\Delta] = ( \Delta_3 \otimes U) (W \otimes U)^T  + ( W \otimes U )( \Delta_3 \otimes U)^T 
+D( ( W \otimes U)(W \otimes U)^T ) [\Delta] = ( \Delta_3 \otimes U) (W \otimes U)^T  + ( W \otimes U )( \Delta_3 \otimes U)^T. 
 \end{equation}
 Note that $U$ is fixed to be identity, otherwise we would have $4$ terms here instead of $2$.
 The last step is to apply $P^h_V$ to this long expression. We shall not give the final result,
@@ -240,24 +251,29 @@ However, we should note that $P^h_V(V \skw A) = 0$ for any matrix $A$ (of the ap
 so the last $3$ terms in \eqref{diff_p_h_v} do not contribute to the final expression.
 
 In the same way we compute the lift of $\Phi_3$
-\begin{multline}
- P^h_W \Phi_3 = W R_3 R_3^T - A_{(3)} (U \otimes V) (U \otimes V)^T A_{(3)}^T W  \\
- + W \skw( (W^T W)^{-1} W^T A_{(3)} (U \otimes V)(U \otimes V)^T A_{(3)}^T W )
- \end{multline}
+
+\begin{equation}
+\begin{split}
+ P^h_W \Phi_3 & = W R_3 R_3^T - A_{(3)} (U \otimes V) (U \otimes V)^T A_{(3)}^T W  \\
+              &  + W \skw( (W^T W)^{-1} W^T A_{(3)} (U \otimes V)(U \otimes V)^T A_{(3)}^T W )
+\end{split}
+ \end{equation}
 and its differential
-\begin{multline}
+\begin{equation}
 \label{diff_p_h_w}
- D(P^h_W \Phi_3) [ \Delta ] = \Delta_3 R_3 R_3^T + W \Delta_3^T A_{(3)} (U \otimes V) R_3^T  \\
- + W W^T A_{(3)} D ( ( U \otimes V)(U \otimes V)^T ) [\Delta] A_{(3)}^T W \\
-+ W R_3 (U \otimes V)^T A_{(3)}^T \Delta_3  \\
- - A_{(3)} D ( ( U \otimes V)(U \otimes V)^T ) [\Delta] A_{(3)}^T W \\
--  A_{(3)}  ( U \otimes V)(U \otimes V)^T A_{(3)}^T \Delta_3 \\
-+ \Delta_3 \skw ( (W^T W)^{-1} R_3 R_3^T ) \\
-+ W \skw ( - (W^T W)^{-1} ( \Delta_3^T W + W^T \Delta_3) (W^T W)^{-1} R_3 R_3^T) \\
-+  W \skw ( (W^T W)^{-1} ( \Delta_3^T A_{(3)} ( U \otimes V) R_3^T + R_3 (U \otimes V)^T A_{(3)}^T \Delta_3 ) ) \\
-+  W \skw ( (W^T W)^{-1} ( W^T A_{(3)} D ( ( U \otimes V)(U \otimes V)^T)[\Delta]  A_{(3)}^T W ) ) 
-\end{multline}
-where
+\begin{split}
+ D(P^h_W \Phi_3) [ \Delta ] & =\Delta_3 R_3 R_3^T + W \Delta_3^T A_{(3)} (U \otimes V) R_3^T  \\
+&  W W^T A_{(3)} D ( ( U \otimes V)(U \otimes V)^T ) [\Delta] A_{(3)}^T W \\
+& W R_3 (U \otimes V)^T A_{(3)}^T \Delta_3  \\
+&- A_{(3)} D ( ( U \otimes V)(U \otimes V)^T ) [\Delta] A_{(3)}^T W \\
+& -  A_{(3)}  ( U \otimes V)(U \otimes V)^T A_{(3)}^T \Delta_3 \\
+& + \Delta_3 \skw ( (W^T W)^{-1} R_3 R_3^T ) \\
+& + W \skw ( - (W^T W)^{-1} ( \Delta_3^T W + W^T \Delta_3) (W^T W)^{-1} R_3 R_3^T) \\
+& +  W \skw ( (W^T W)^{-1} ( \Delta_3^T A_{(3)} ( U \otimes V) R_3^T + R_3 (U \otimes V)^T A_{(3)}^T \Delta_3 ) ) \\
+& +  W \skw ( (W^T W)^{-1} ( W^T A_{(3)} D ( ( U \otimes V)(U \otimes V)^T)[\Delta]  A_{(3)}^T W ) ). \end{split}
+\end{equation}
+
+Here
 \begin{equation}
  D( ( U \otimes V)(U \otimes V)^T ) [\Delta] = ( U \otimes \Delta_2 )(U \otimes V)^T + ( U \otimes V)  ( U \otimes \Delta_2 )^T 
 \end{equation}
@@ -266,3 +282,25 @@ where
 As before, the last $3$ terms in \eqref{diff_p_h_w} can be ignored. All that remains to do now
 is to apply the same vectorization rules as in Newton-Grassmann method to get the matrix of the linear system.
 
+
+
+
+\begin{algorithm}
+\caption{Differential-geometric Newton method}\label{dgn_algo}
+\begin{algorithmic}[1]
+\Function{DiffGeomNewton} { $\A \in \R^{d_1 \times d_2 \times d_3}$, $r_2$, $r_3$}
+\State $F_2, F_3 := \mbox{HOSVD}(\A, r_2, r_3)$
+\Repeat 
+
+\State Solve the system \eqref{dg_newt_system} to get $\Delta_2$, $\Delta_3$.
+\State Update $F_2$ and $F_3$ by adding the $\Delta_i$ from the system, $F_i = F_2 + \Delta_i.$
+    
+\Until termination criterion satisfied or maximum iterations exhausted.
+
+
+\State \Return $F_2$, $F_3$
+
+
+\EndFunction
+\end{algorithmic}
+\end{algorithm}

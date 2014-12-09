@@ -4,7 +4,7 @@ In this section we recall some mathematical notions
 we shall need to discuss the last two algorithms, 
 Newton-Grassmann and Differential-Geometric Newton methods.
 
-\subsection{Newton's method}
+\subsection{Newton method}
 
 Let us recall some basic facts about ordinary Newton method. The minimization problem for 
 a smooth function is usually reduced to finding zero of the gradient, 
@@ -18,14 +18,15 @@ to move along the tangent lines to the graph of $f$. Analytically this is expres
 \end{equation}
 
 
-\begin{figure}
-        \centering
-                \includegraphics[width=8cm]{images/newton-image1.png}
-        \caption{Newton's method illustration}
-        \label{fig:hooi_hosvd_comparison}
-\end{figure}
+%\begin{figure}
+%        \centering
+%                \includegraphics[width=8cm]{images/newton-image1.png}
+%        \caption{Newton's method illustration}
+%        \label{fig:newt_method_tangents}
+%\end{figure}
+
 The method is known to be very fast-convergent (providing that the initial value $x_0$ is close enough to a root).
-In multidimensional case the formula is
+In multivariate case the formula is
 \begin{equation}
  x_{n+1} = x_n - ((Df)(x_n))^{-1} ( f(x_n) ).
 \end{equation}
@@ -54,12 +55,12 @@ the level sets are circular and this allows us to move to the optimum much faste
 \end{figure}
 
 
-However, Newton's method is known to behave poorly, if the root is not isolated.
+However, Newton method is known to behave poorly, if the root is not isolated.
 This is exactly the situation we have in Tucker2 decomposition, where the objective function
-does not change, if factor matrices are multiplied by any orthogonal matrices. The geometric
-interpretation of this operation is that we choose another orthonormal basis in the same subspace.
+does not change, if factor matrices are multiplied by any orthogonal matrices. 
+%The geometric interpretation of this operation is that we choose another orthonormal basis in the same subspace.
 There are orthogonal matrices approximately close to the identity matrix, so the zeros
-of gradient w.r.t. entries of $F_2$, $F_3$ are not isolated. In order to apply Newton's method
+of the gradient w.r.t. entries of $F_2$, $F_3$ are not isolated. In order to apply Newton method
 we need to work in more geometric terms, and we start by brief informal description of the notions
 that are necessary, namely: smooth manifold, tangent space, differential of a mapping between two smooth manifolds,
 Riemannian metric, geodesic.
@@ -71,11 +72,15 @@ to understand the intuition behind the two remaining methods.
 
 
 \subsection{Some notions from differential geometry}
+\subsubsection{Smooth manifolds}
 A smooth manifold of dimension $n$ is a space which locally 
 looks like $\R^n$. 
 This means that in a neighbourhood of each point we have a local coordinate system $(x_1(\cdot), \dots,  x_n(\cdot))$.
-Point $p$ of a manifold $M$ in this system is described by $(x_1(p), \dots, x_n(p)) \in \R^n$. Usually these coordinate systems 
-cover only a part of the manifold, but each point belongs to the domain
+Point $p$ of a manifold $M$ in this system is described by 
+\begin{equation}
+p \mapsto (x_1(p), \dots, x_n(p)) \in \R^n. 
+\end{equation}
+Usually these coordinate systems  cover only a part of the manifold, but each point belongs to the domain
 of at least one of them.
 If the domains of two coordinate systems $(x_1(\cdot), \dots, x_n(\cdot))$
 and $(y_1(\cdot), \dots, y_n(\cdot))$ intersect, then we have transition functions
@@ -87,23 +92,25 @@ This approach to manifolds does not require them to be a subset of
 any ambient Euclidean space $\mathbb{R}^N$. There is Whitney's embedding theorem 
 that states that any manifold can be embedded into $\mathbb{R}^N$
 for some $N$. However, sometimes there is no good or natural way to choose this embedding.
-Examples.
+
 \begin{enumerate}
     \item $\R^n$ is a manifold (the identity mapping is a coordinate system that
         covers the whole space). Since every finite-dimensional vector space is 
         isomorphic to $\R^n$, vector spaces are also manifolds. In particular,
-        the space of $m \times n$ matrices is a manifold isomorphic to $\R^n$.
+        the space of $m \times n$ matrices is a manifold isomorphic to $\R^{mn}$.
     \item If $M$ is a manifold, then every open subset of $M$ is also a manifold.
         In particular, the set of $m \times n$ matrices with some fixed rank $k$
         is a manifold. We shall need the set $\R^{n \times n}_{*}$ of non-singular $n \times n$ matrices,
         which is a manifold by this remark.
     \item If $M$ is a smooth manifold and there is an equivalence relation $\sim$ on $M$,
         then, under some conditions, the set of equivalence classes $M / \sim$ is 
-        also a manifold (\textit{quotient manifold theorem}, see \cite{lee_manifolds}).
+        also a manifold (\textit{quotient manifold theorem}, see J. M. Lee \cite{lee_manifolds}, Theorem 9.16).
     \item If $M$ and $N$ are smooth manifolds, then $M \times N$ is a smooth
         manifold.
 \end{enumerate}
 
+
+\subsubsection{Tangent Space}
 
 Let $p$ be an arbitrary point of a smooth manifold $M$. The tangent space at $p$
 is a vector space of the same dimension as $M$ and it is denoted by $T_pM$.
@@ -123,6 +130,8 @@ it allows us to treat matrix-valued functions of matrix argument $\R^{m \times n
 as vector fields on the manifold of matrices ($\R^{m \times n} \cong \R^{mn}$ as vector spaces).
 
 
+\subsubsection{Differential and Gradient}
+
 Generally speaking, the only structure that $T_pM$ has is that of a vector space, there is no
 inner product and there is no correspondence between $T_pM$ and $T_qM$ for different
 points $p, q \in M$. However, this structure is sufficient to define a differential
@@ -138,6 +147,12 @@ so the gradient of a function is not a vector (element of a tangent space),
 but a covector (element of an adjoint space $(T_pM)^*$).
 
 
+If $f$ is a bijection between two smooth manifolds $M$ and $N$ such that
+for all $p \in M$ and $q \in N$ the linear operators
+$(Df)_p$ and $(D(f^{-1}))_q$ are non-singular, then $f$ is said to be a \textit{diffeomorphism}.
+Manifolds $M$ and $N$ are \textit{diffeomorphic}, if there exists a diffeomorphism between them.
+
+\subsubsection{Riemannian Metric}
 
 If each $T_pM$ is equipped with an inner product
 that changes smoothly as we move along $M$, then $M$ is said to be a Riemannian manifold.
@@ -159,7 +174,7 @@ of $T_pM$).
 If two different points $p, q$ on a Riemannian manifold are close enough to each other,
 there is a unique shortest path connecting $p$ and $q$. 
 The condition of being locally shortest path is certain differential equation
-and it's solutions are called geodesics. If we consider $S^2$ in $\mathbb{R}^3$, 
+and its solutions are called geodesics. If we consider $S^2$ in $\mathbb{R}^3$, 
 then geodesics are arcs of large circles. This example illustrates that in general it is not true,
 that two points are connected by the unique geodesics (consider North and South poles)
 or that geodesic path is always the shortest: if $p$ and $q$ are close to each other,
@@ -167,6 +182,8 @@ there is a unique large circle passing through $p$ and $q$, but it gives rise to
 geodesics: the shortest path is the shorter arc of the circle, but the longer arc 
 is a geodesic, too.
 
+
+\subsubsection{Fiber Bundle}
 
 In the differential-geometric Newton method
 we shall need the notion of fiber bundle.
@@ -177,9 +194,9 @@ parameterized by the base $\mathbb{S}^1$,
 so there is one instance of $[0,1]$ attached to each point of the circle.
 A M\"obius band can also be split into disjoint segments
 $[0,1]$ parameterized by $\mathbb{S}^1$. Locally both the cylinder
-and M\"obius band are isomorphic to a cartesian product
+and M\"obius band are diffeomorphic to a cartesian product
 of the arc of a circle and $[0,1]$. The cylinder is, of course,
-isomorphic to the cartesian product not just locally, but globally,
+diffeomorphic to the cartesian product not just locally, but globally,
 but it is not the case for the M\"obius band, where the trivial
  pieces are glued together in a non-trivial way. Both these spaces
 are called total spaces of fiber bundles with the base $\mathbb{S}^1$ and fiber $[0,1]$.
@@ -190,14 +207,14 @@ In general, a fiber bundle is a triple $( \pi, E, B)$, where
 $ \pi \colon E \to B$ is a surjective mapping such that:
 \begin{enumerate}
     \item The inverse image $\pi^{-1}(p)$ of each point $p \in B$ is 
-    isomorphic to some fixed manifold $F$.
+    diffeomorphic to some fixed manifold $F$.
     \item Every point $p \in B$ has a neighbourhood $V_p$
     such that $\pi^{-1}(V_p)$ is isomorphic to $V_p \times F$.
 \end{enumerate}
-    The space $E$ is a \textit{total space} of the bundle, $B$ is a textit{base}, and $F$ is a \textit{fiber}.
+    The space $E$ is a \textit{total space} of the bundle, $B$ is a \textit{base}, and $F$ is a \textit{fiber}.
 
 Since the tangent space is a local notion, for each point $p \in E$
-the tangent space at $p$ is isomorphic to a direct product
+the tangent space at $p$ is isomorphic to a direct sum 
 of the tangent space to the base $T_h$ and the tangent space to the fiber $T_v$,
 \begin{equation}
     T_p E = T_h \oplus T_v
@@ -206,15 +223,18 @@ If one wants to visualize a fiber bundle,
 one usually thinks of the base positioned horizontally and the fibers
 attached to the base in the orthogonal (that is, vertical) direction,
 therefore the space $T_h$ is called a horizontal space and the space $T_v$
-is called a vertical space.
+is called a vertical space. This is illustrated in Figure \ref{fig:torus_tangent}. Here 
+the big parallel of the torus is its base, the meridians are fibers, and the vertical and
+horizontal lines are $T_v$ and $T_h$, respectively.
 
 \begin{figure}
         \centering
                 \includegraphics[width=8cm]{images/torus_tangent.jpg}
-        \caption{Tangent plane to a fiber bundle}
+        \caption{Tangent plane to a fiber bundle.}
         \label{fig:torus_tangent}
 \end{figure}
 
+\subsubsection{Affine Connection}
 
 The last notion we shall describe here is \textit{affine connection on a manifold}.
 
@@ -225,7 +245,7 @@ the following axioms:
 \begin{enumerate}
     \item $\nabla_X$ is an $\R$-linear operator;
     \item (Leibniz formula) $$\nabla_X(fY) = (Xf) \cdot Y + f \nabla_X Y $$
-        Recall that, if $X = \sum_k b_k \frac{\partial}{\partial x_k}$ is a coordinate representation 
+        If $X = \sum_k b_k \frac{\partial}{\partial x_k}$ is a coordinate representation 
         of vector field $X$, then the function
         $Xf$ is defined by
         $$Xf = \sum_k b_k \frac{\partial f}{\partial x_k}$$

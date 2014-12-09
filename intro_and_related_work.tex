@@ -1,40 +1,295 @@
 \chapter{Introduction}
 
-%There are many applications where we need to analyze face.
-%In computer graphics we want to synthesize face images, 
-%to edit existing images (say, change person's expression in a photo).
-%In human-computer interaction we want virtual avatars to copy the mimic
-%of real face. It may be convenient to be able to log into one's account
-%by just allowing the computer to scan one's face.
-%Some of these applications are naturally 3-dimensional (image synthesis
-%is rendering a 2D image of a 3D model),
-%some of them may become 3-dimensional in a short period of time (
-%since 3D technologies become more and more accessible,
-%it might be that a 3D-scanner will be a part of standard laptop
-%in the future, as a web-camera is now). 
+
+The human face is, perhaps, the most important means of non-verbal 
+communication, and there are numerous scenarios where
+we need to analyze faces.
+For example, the problem of expression recognition
+attracted a lot of attention in the computer vision community,
+and significant progress has been made.
+% (see the survey by Sandbach et al. \cite{sandbach_2012}).
+Computer graphics is interested in synthesizing realistic images 
+of human faces or editing existing ones. In human-computer interaction,
+if we wish to animate a virtual avatar so that it reflects the actual
+emotions of a user, it is necessary to solve both these problems.
+A similar example is provided by cinema industry,
+where virtual characters get their mimic from real actors.
+Another application can be editing photos to change the expression
+of a person in this photo. 
+For security applications it may be convenient to use
+a face for identification purposes.
+In ergonomics one studies the statistical distribution 
+of shapes of faces to determine optimal design for face masks.
 
 
-%The mainstream(?) approach to solve these problems 
-%is a statistical one: we acquire a large database of faces
-%and learn a statistical model with it.
-%Statistical models can be discriminative or generative,
-%we are interested in generative models.
+Some of these applications are naturally 3-dimensional (image synthesis
+is rendering a 2D image of a 3D model),
+some of them may become 3-dimensional in a short period of time (since 3D technologies become more and more accessible,
+it might be that a 3D-scanner will be a part of standard laptop
+in the future, as a web-camera is now). 
 
-%In this thesis we study the influence of numerical methods
+
+A popular approach to solve these problems 
+is building a  statistical model. One acquires a large database of faces,
+represents each face as a coordinate vector and studies
+the distribution of these vectors. Of course, if we want
+to apply statistical models to such a sample of vectors,
+they all must have the same dimensionality and the points
+on each scan must be in correspondence. This means
+that as a preprocessing step it is necessary to \textit{register} 
+all scans, that is, to establish dense correspondence between points.
+It is also helpful, if the database is annotated, the information
+can include gender, age, ethnicity, emotion, and position
+of landmarks (certain keypoints, such as tip of the nose, corners of eyes,
+etc) on each instance. It is clear that acquiring such a database involves a lot of work.
+%is a challenging task,
+Nevertheless, now there are several publicly available
+databases of 3D face scans (e.g., BU-3DFE by Yin et al., \cite{BU_3DFE}, BU-4DFE by Yin et al.
+\cite{BU_4DFE}, Bosphorus by Savran et al. \cite{Savran}).
+
+
+In this thesis we shall work with one statistical
+model which is called the multilinear model.
+It is aimed at separating identity and expression variations
+of 3D shape of a face, which is a desirable property in many applications 
+(e.g., an automated surveillance system should recognize
+a person independently of the person's mood).
+The model  is based on a certain form
+of compression of multidimensional arrays, a problem
+that does not have a closed-form solution.
+The first step of this projection procedure is to center
+the data by subtracting the mean. 
+The compression of the centered array is performed by applying orthogonal
+projections along different dimensions of the array in order to get a 
+new array whose dimensions are significantly smaller than the dimensions
+of the original one. This new array is called a \textit{core}. The exact formulation
+of the problem will be given in Chapter \ref{chap_mult_model}.
+
+
+There are several approximate methods to estimate the optimal
+projection operators.   The objective of this thesis is to investigate
+the influence of the following four numerical algorithms
+for solving this problem on the quality of the model: 
+\begin{itemize}
+\item Truncated Higher-Order Singular Value Decomposition (\cite{kolda_bader_2009});
+\item Higher-Order Orthogonal Iteration (\cite{kolda_bader_2009});
+\item Newton-Grassmann method (\cite{elden_savas_2009}) ;
+\item Differential-Geometric Newton method (\cite{IDLAVH09}).
+\end{itemize}
+We should note that the multilinear model for faces requires one of the projection
+operators to be fixed. This  difference in the problem formulation
+leads to some modifications of the algorithms. For the first two algorithms
+these modifications are easy to make and the corresponding versions of these 
+algorithms have already been formulated in the literature.
+However, the formulas for the last two algorithms are lengthy,
+so it is necessary to derive them for the modified problem
+following the derivations in the original papers.
+
+
+
+The contributions of this thesis are:
+\begin{itemize}
+\item Modification of the Newton-Grassmann and Differential-Geometric Newton methods
+for the problem formulation used in the multilinear model.
+\item Actual implementation of all four algorithms.
+\item Evaluation of the algorithms on facial data using the
+standard numerical analysis criteria and some rough practical estimates of the running time.
+\item Evaluation of the resulting models with two application-relevant
+problems: fitting and expression recognition.
+Fitting means that for an (unseen) face scan 
+we are trying to generate the closest approximation
+of this scan using the learnt model. This test measures
+the ability of the model to \textit{generalize}.
+In the expression recognition test we use the model
+to classify the expression of the input face. Having a good
+classification rate means that the model has successfully separated identity
+and expression information.
+\end{itemize}
+
+
+The thesis is organized as follows. In Chapter \ref{rel_work}
+we discuss related work. Then we formulate
+the multilinear model in Chapter \ref{chap_mult_model}. 
+In Chapter \ref{chap_algo} we discuss the four algorithms that we evaluate.
+Chapter \ref{chap_eval} contains experimental evaluation results
+and implementation details. The conclusion
+is summarized in Chapter \ref{chap_conclusion}.
 
 
 \chapter{Related Work}
+\label{rel_work}
 
 
-%Blanz and Vetter introduced their famous model in ~\cite{bl_vet_2003}.
-%They arranged all the data in a matrix and proposed using principal
-%component analysis to learn the low-dimensional subspace.
+\section{Statistical Models and Their Applications}
+The first statistical model for 3D faces
+was introduced in Blanz and Vetter~\cite{BlanzVetter1999}. They worked with both texture and geometric data,
+but most of the faces in their database were in neutral expression.
+They used an optic flow technique to establish dense correspondence
+between scans and then applied  principal
+component analysis (PCA) to learn the low-dimensional subspace.
+The learnt model was used to reconstruct $3D$ faces from $2D$ images
+and to generate new faces. 
 
-%In order to decouple identity and expression, 
-%Vasilescu and Terzopoulos in~\cite{vt_2002} considered a 3-dimensional
-%array (\textit{tensor}) and applied the same technique
-%to tensors (the idea originated in text analysis,
-%where the same technique was used to decouple author 
-%and style).
 
 
+Let us briefly recall how PCA works using geometric 3D data as an example.
+Blanz and Vetter represent each 3D face scan as a column vector $\mathbf{S}_i$
+and arrange them in the matrix $S = [ \mathbf{S}_1 \, \dots \, \mathbf{S}_m ]$,
+where $m$ is the number of faces. Let $\bar{\mathbf{S}}$ be the mean face (average of $\mathbf{S}_i$). 
+We center the data by subtracting $\bar{\mathbf{S}}$ from each column of $S$,
+let $A$ be the centered matrix.
+If $U$ is a $k \times m$ matrix with orthonormal columns and $k < m$, 
+we can compress the centered data using $U$,
+\begin{equation}
+\label{pca_compress1}
+M = U A.
+\end{equation}
+Multiply both sides of the equation \eqref{pca_compress1} with $U^T$ from the right. 
+Since $U$ has orthonormal columns, the matrix $U^T U $ is a diagonal matrix
+with $k$ first diagonal entries equal to $1$ and all other entries being $0$. 
+\begin{equation}
+A \approx U^T M .
+\end{equation}
+We call the compressed matrix $M$ the \textit{core matrix}, and the projection $U$ is
+called a \textit{factor matrix}.  If we want the restored version to be the closest
+possible approximation of the original data, the PCA theory says 
+that the projection matrix must consist of 
+the eigenvectors of the covariance matrix that correspond to the largest eigenvalues (this eigenvectors 
+This projection gives us the low-dimensional subspace that keeps as much variance as possible.
+Now, if we have $k$ parameters $\w = (w_1, \dots, w_k) \in \R^k$, we can generate 
+a new face using the formula
+\begin{equation}
+\label{face_gen_pca}
+\mathbf{S} = \bar{\mathbf{S}} + M \times \w.
+\end{equation}
+
+
+
+Further application of PCA to statistical analysis of shapes
+was done by Yang et al.~\cite{Yang_2011}. 
+Their paper is devoted to the expression transfer problem.
+In this problem we have two images ${Im}_1$ and ${Im}_2$ of
+two persons $P_1$ and $P_2$. We want to edit the first image $\mathrm{I}_1$
+so that the person $P_1$ in this image will have the same expression as the person $P_2$
+in the image ${Im}_2$. Yang et al. solve this problem by
+learning separate PCA models for each expression. 
+
+
+
+
+Vasilescu and Terzopoulos \cite{vt_2002} 
+proposed building a single statistical  model that decouples
+variations for different identities
+and expressions. They
+used a generalization of PCA,
+which is  applied  to multidimensional arrays.
+They were inspired by the same approach in natural language processing,
+where this idea was  used by Tenenbaum and Freeman \cite{Tenenbaum_2000} to decouple author 
+and style of a text.
+Vlasic et al.~\cite{vlasic}  generalized the bilinear model 
+used by Vasilescu and Terzopoulos. They also applied their model
+to the expression transfer problem. We shall use the multilinear model as it 
+was formulated in~\cite{vlasic} in this thesis.  
+Dale et al.~\cite{dale} applied the multilinear model to editing video 
+sequences. Mpiperis et al.~\cite{mpip} introduced another variant
+of a multilinear model and applied it to recognize both expression and identity
+of a face. We shall use an approach similar to this method
+ in our expression recognition experiments.
+
+
+
+We postpone the formal definitions of all necessary notation to Chapter \ref{chap_mult_model}.
+However, just to show that multilinear model is indeed a generalization 
+of PCA, we give some basic formulas here.  Let $\X$ be a multidimensional
+array in which we organize our data (e.g., dimension 1 corresponds to the coordinates
+of vertices, dimension 2 corresponds to the identity and dimension 3 corresponds to the expression).
+Such arrays will be called 
+\textit{tensors}.
+As in PCA, we need to center the data by subtracting the mean face $\bmu$ from each scan, let $\A$
+denote the centered array.
+The multilinear model consists of the
+\textit{core tensor} $\G$ and projection matrices $F_2$ and $F_3$ with orthonormal columns such that
+
+\begin{equation}
+\label{tucker_prelim}
+\Y  \approx \G \times_2 F_2^T \times_3 F_3^T .
+\end{equation}
+
+Now, if we have two vectors $\w_2$ and $\w_3$, we can generate a new face by
+\begin{equation}
+\label{face_gen_mlm}
+\f = \bmu + \G \times_2 \w_2^T \times_3 \w_3^T.
+\end{equation}
+
+The exact meaning of the notation used in these formulas is explained in the next chapter. However,
+the reader can immediately spot certain similarity between formulas \eqref{face_gen_pca}
+and \eqref{face_gen_mlm}.
+
+A further generalization of the multilinear model was proposed by Brunton et al. \cite{brunton_mwave}.
+Instead of one model that captures the whole face they learn several multilinear
+models for different scales. The authors use wavelets to perform localization.
+As a side remark we should note that there is a theoretical justification 
+by Xu and Chowdhury~\cite{xu2008} for using localized linear and multilinear models for 2D images.
+However, no such justification is known for 3D data.
+
+
+There are a lot of papers which apply linear or multilinear statistical models 
+in various scenarios. For example, the morphable model by Blanz and Vetter
+was used in \cite{Blanz2007} for face recognition (with restriction to neutral expression) and for registration
+of 3D scans. Registration with morphable model was also performed by Patel and Smith \cite{PatelSmith2009}.
+The multilinear model formulated by Vlasic et al. \cite{vlasic} was used by Bolkart and Wuhrer \cite{BolkartWuhrer2014} to analyze motion data (the motion sequences were automatically registered, there also are applications
+to the synthesis of new motion sequences and dynamic expression recognition).
+We have already mentioned expression transfer problem. 
+
+\section{Tensors and Tensor Decompositions}
+
+Multilinear model is based on the compression of multidimensional arrays
+of the form \eqref{tucker_prelim}. Multidimensional arrays
+are called tensors and this form of compression is called Tucker decomposition. It was introduced by Ledyard L. Tucker  \cite{tucker_63} in 1963 and was originally applied to psychometic problems.
+The first method of computing this decomposition was proposed by Tucker himself and
+is now known as truncated higher-order singular value decomposition. We shall refer to it
+as HOSVD, it is described in Section \ref{sec_hosvd}.
+
+
+The next algorithm was based on alternating least squares
+approach and was called TUCKALS (Tucker Alternating least squares). It was developed
+by Kroonenberg and De Leeuw \cite{kroonenberg}. Its further improvements
+lead to a simple and fast iterative algorithm by De Lathauwer et al. \cite{de2000best}
+known as higher-order orthogonal iteration (HOOI). We describe this algorithm in Section \ref{sec_hooi}.
+
+
+These algorithms were developed using classical methods based 
+on calculus and matrix algebra.  However, in the last decades
+numerical linear algebra started using some more recent
+tools of pure mathematics, especially differential geometry. There
+are papers on optimization on Riemannian manifolds
+in general (e.g., Adler et al. \cite{adler_spine}) or
+papers studying optimization on specific classical manifolds. From the linear algebraic perspective, the most 
+important examples of manifolds  are Stiefel 
+and Grassmann manifolds (we shall explain later, why Grassmann manifold
+is a natural domain to consider  Tucker decomposition
+problem). The first paper devoted to optimization
+on Grassmann manifolds was Edelman et al. \cite{edelman_1998}. It provided
+a general geometric framework that allowed generalization
+of well-known optimization algorithms in $\R^N$ to Grassmann manifolds (they also
+considered Stiefel manifolds, but this is less relevant to us).
+  This framework was used by Elden and Savas \cite{elden_savas_2009}
+to develop a generalization of Newton method for Tucker decomposition problem which they 
+called Newton-Grassmann method. This method operates on Grassmann manifold
+and updates of factor matrices are performed by moving along the geodesic curves on this manifold.
+
+
+Another generalization of the Newton method was proposed in Ishteva et al. \cite{IDLAVH09},
+who work on a non-classical manifold that we shall introduce in Section \ref{sec_dg_newton}.
+The manifold they work on is a quotient of the manifold of all $n \times p$ matrices
+with maximal rank. The update of the factor matrices is performed
+by simple addition. The algorithm is described in Section \ref{sec_dg_newton}.
+
+
+
+Finally, we mention several papers that deal with some other forms
+of decomposition or assume that the tensor has some special structure: \cite{elden_krylov},
+\cite{badeau},  \cite{oseledets}, \cite{hao_horesh}.
+There are also papers that introduce new algebraic operations on tensors and 
+use this operations to define new types of decomposition, which are applied
+in facial recognition and image deblurring: Kilmer et al. \cite{kilmer_3rd}, Hao et al. \cite{hao_kilmer}.

@@ -11,7 +11,7 @@
 \usepackage{amsfonts,amssymb}
 \usepackage{amsmath}
 \usepackage{algorithm}
-\usepackage[noend]{algpseudocode}
+\usepackage[]{algpseudocode}
 
 \usepackage{titlesec}
 %\newcommand{\sectionbreak}{\clearpage}
@@ -27,6 +27,7 @@
 
 \newcommand{\w}{{\mathbf{w}}}
 \newcommand{\f}{{\mathbf{f}}}
+\newcommand{\tf}{{\tilde{\mathbf{f}}}}
 \newcommand{\col}{{\col}}
 
 \newcommand{\bmu}{{\boldsymbol{\mu}}}
@@ -69,20 +70,107 @@
 \DeclareMathOperator*{\rk}{rank}
 \DeclareMathOperator*{\im}{im}
 \title{tensor_decomp_comparison}
-\author{a.nigmetov }
-\date{December 2013}
+\author{Arnur Nigmetov }
+\date{December 2014}
 
 \begin{document}
 
+
+\begin{titlepage}
+    \begin{center}
+        \vspace{0.3cm}
+        
+        \includegraphics[width=0.5\textwidth]{images/uni-logo.png}
+        
+        
+        \vspace{1.7cm}
+        
+        \Large 
+        \textbf{Saarland University}\\
+        \textbf{Faculty of Natural Sciences and Technology}\\
+        \textbf{Department of Computer Science}\\
+        
+        
+        \vspace{1.5cm}
+        
+        \Large
+        Master Thesis
+        
+        
+        \vspace{0.5cm}
+        
+        \LARGE
+        \textbf{Analysis of Tensor Decomposition for 3D Human Face Modeling}
+        
+        \vspace{1.5cm}
+        
+        {submitted by}\\
+        {Arnur Nigmetov}\\
+        
+        \vfill
+        
+        Reviewers:\\
+        Dr. Stefanie Wuhrer\\
+        Prof. Dr. Christian Theobalt
+        
+        
+        \vspace{1.2cm}
+        
+        
+        
+    \end{center}
+\end{titlepage}
+
+
+\newpage
+\thispagestyle{empty}
+\mbox{}
+        
+\thispagestyle{empty}
+\vspace{1.5cm}
+
+\begin{center}
+\textbf{Eidesstattliche Erklärung}
+\end{center}
+
+Ich erkläre hiermit an Eides Statt, dass ich die vorliegende Arbeit selbständig verfasst und keine anderen als die angegebenen Quellen und Hilfsmittel verwendet habe.
+
+
+\vspace{2.5cm}
+
+\begin{center}
+\textbf{Statement in Lieu of an Oath}
+\end{center}
+
+I hereby confirm that I have written this thesis on my own and that I have not used any other media or materials than the ones referred to in this thesis
+
+\vspace{1.5cm}
+
+\begin{center}
+\textbf{Einverständniserklärung}
+\end{center}
+
+Ich bin damit einverstanden, dass meine (bestandene) Arbeit in beiden Versionen in die Bibliothek der Informatik aufgenommen und damit veröffentlicht wird.
+
+
+\vspace{1.5cm}
+
+\begin{center}
+\textbf{Declaration of Consent}
+\end{center}
+
+I agree to make both versions of my thesis (with a passing grade) accessible to the public by having them added to the library of the Computer Science Department.
+
+
+\vspace{2.5cm}
+
+Saarbrücken, $\underset{\text{ (Datum / Date)}}{\underline{ \hspace{0.3\textwidth}}}  \qquad \underset{\text{ (Unterschrift/ Signature )}}{\underline{ \hspace{0.4\textwidth}}} $ 
+
+
 \tableofcontents
+\newpage
 
-% describe model
-% 
-
-%One of the approaches to tensor decomposition
-
-%Bolkart and WuhrerIn the multilinear model from\cite{bolkart_wuhrer_2013} 
-
+\input{acknowledgments.tex}
 
 \input{intro_and_related_work.tex}
 
@@ -93,8 +181,8 @@
 
 \input{evaluation.tex}
 
-\chapter{Conclusion}
 
+\input{conclusion.tex}
 
 
 

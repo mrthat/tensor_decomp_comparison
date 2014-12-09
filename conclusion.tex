@@ -1,0 +1,73 @@
+\chapter{Conclusion}
+\label{chap_conclusion}
+
+\section{Numerical Aspects}
+We compared the numerical methods for computing Tucker2 decomposition
+on the data obtained from a large database of face scans. 
+Since the original papers for two Newton methods deal with full Tucker
+decomposition problem and the resulting formulas
+are too complicated to simply change them by analogy for Tucker2 case,
+we had to re-derive the formulas for Tucker2 case following the original proofs.
+
+
+It is known (Ishteva \cite{ishteva_thesis}) that in general,
+\begin{itemize}
+    \item HOSVD may provide initialization values that do not belong to the basin of the global optimum.
+    \item HOOI may not converge or converge to a non-stationary point.
+    \item Newton methods are proven to converge only if the initialization is
+        close enough to the extremum point. In general, they might diverge,
+        converge to a maximum instead of a minimum, or converge to a saddle point.
+    \item HOOI, differential-geometric Newton method, and Newton-Grassmann
+        method may converge to different solutions. 
+\end{itemize}
+These difficulties usually do not arise in the simulated data that
+are typically used for tests in numerical analysis papers.
+We can see that facial data provide a much more challenging dataset
+for Tucker2 decomposition problem.
+Indeed, the fact that even after performing $30$ iterations
+of HOOI the Hessian in the Newton-Grassmann method still has both
+positive and negative eigenvalues (while the relative norm of the gradient gets below $10^{-6}$)
+indicates that in our case 
+HOOI converges to a saddle-point, not a local maximum of the cost function.
+This may be the reason why both Newton methods performed so poorly, since they rely on a good initialization. 
+Finding this good initialization seems to be the biggest issue.
+In fact, there are only $2$ options available: either
+use HOSVD or initialize randomly. Obviously, 
+in our case random initialization has no chance to outperform the HOSVD due 
+to the dimension of the problem.  
+We may hypothesize that these issues are caused by the fact that 
+the first mode in our case has a much higher dimension than the other two modes.
+
+
+
+It would be very interesting to find some good (tight, or close to tight) lower bounds for 
+the norm of the residual in Tucker (or Tucker2) decomposition problem.
+If we had such a lower bound, we could see that, say, HOSVD in our
+case produces the result that is only by $10 $ \% worse than the 
+best approximation we could get. The author, being not an expert in 
+numerical methods, is not aware of such bounds and could not provide 
+any reasonable bounds himself.
+
+
+\section{Practical Implications}
+
+Considering results for fitting and expression recognition
+we conclude that there is no significant difference between the $4$ methods.
+Neither the average error, nor the shape of cumulative error plot, nor
+the distribution of the areas with high fitting error on the face exhibit
+noticeable change. The fact
+that making $30$ iterations of HOOI instead of $4$ does not lead to practically any 
+change might suggest that the norm of the residual is more significant than
+the relative norm of the gradient (see plots \ref{}, \ref{}). However,
+we cannot safely claim this, because HOOI in our experiments
+converges to a saddle-point, and for some other dataset with
+different registration method the situation might change.
+The only positive news is that the multilinear model
+shows stability, small changes in the model do not produce huge
+changes in the output.
+
+
+Taking into account the amount of time needed to implement
+more sophisticated methods, we can definitely say
+that it does not pay off to actually use them in practice,
+and that HOSVD remains the most reasonable choice.

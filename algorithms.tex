@@ -1,33 +1,44 @@
 \chapter{Algorithms for Computing Tucker2 Decomposition}
-\label{alg_chapter}
+\label{chap_algo}
 
 \input{math_prelimin.tex}
 
 \section{Higher-order SVD}
+\label{sec_hosvd}
+
 This method is analogous to standard method of computing PCA for matrices.
 Recall that if $A$ is an $m \times n$ real matrix, then it can be decomposed as 
 \begin{equation}
+\label{svd_def}
  A = U \Sigma V^T,
 \end{equation}
 where $\Sigma$ is a (rectangular) diagonal matrix with non-negative elements on the diagonal and $U$ and $V$ are orthogonal matrices: $U \in O(m)$, 
 $V \in O(n)$. $U$ is called the matrix of left singular vectors (its columns are eigenvectors of $AA^T$), $V$ is the
-matrix of right singulare vectors (eigenvectors of $A^TA$). Let $ \sigma_1 \geq \dots \geq \sigma_r$ be non-zero diagonal elements of $\Sigma$, then the rank of $A$ is $r$. The optimization problem
+matrix of right singular vectors (eigenvectors of $A^TA$). Let $ \sigma_1 \geq \dots \geq \sigma_r$ be non-zero diagonal elements of $\Sigma$, then the rank of $A$ is $r$. The decomposition \eqref{svd_def} 
+is called Singular Value Decomposition (SVD). The optimization problem
 \begin{equation}
-\| A - B \| \to \min \mbox{subject to $\rk B = k $}
+\| A - B \| \to \min \mbox{ subject to $\rk B = k $}
 \end{equation}
-is a matrix analog of \eqref{tucker_min}. Unlike tensor case, this problem can be solved exactly.
+is a matrix analog of Tucker \eqref{tucker_min}. Unlike tensor case, this problem can be solved exactly.
 Let $\Sigma_k$ be  the matrix obtained from $\Sigma$ by setting $\sigma_{k+1}, \dots, \sigma_r$
 to $0$, then the optimal matrix $B$ is $U \Sigma_k V^T$. 
 
 The higher-order singular value decomposition for Tucker2 is formulated as follows.
 
-Compute SVD of unfoldings $\A_{(2)}$ and $\A_{(3)}$:
+
+\begin{algorithm}
+\caption{HOSVD}\label{HOSVD}
+\begin{algorithmic}[1]
+\Function{HOSVD}{ $\A \in \R^{d_1 \times d_2 \times d_3}$, $r_2$, $r_3$}
+
+\State Compute SVD of unfoldings $\A_{(2)}$ and $\A_{(3)}$:
 
 \begin{eqnarray}
  \A_{(2)} = U_2 \Sigma_2 V_2^T  \\
  \A_{(3)} = U_3 \Sigma_3 V_3^T
 \end{eqnarray}
-Truncate matrices of left singular vectors $U_2$ and $U_3$ and take the result
+
+\State Truncate matrices of left singular vectors $U_2$ and $U_3$ and take the result
 as projection matrices $F_2$, $F_3$.
 
 \begin{eqnarray}
@@ -35,8 +46,17 @@ F_2 = U_2(:, 1:r_2) \\
 F_3= U_3(:, 1:r_3)
 \end{eqnarray}
 
-This method is a heuristics, there is no mathematical proof that it gives
-the approximation which is in some sense 'good'. However, in practice it produces
+
+\State \Return $F_2$, $F_3$
+
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+
+
+This method is a heuristic, there is no mathematical proof that it gives
+the approximation which is in some sense 'good'. However, in practice this produces
 results that are reasonable and is used as initialization for iterative methods.
 
 \input{hooi.tex}

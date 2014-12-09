@@ -1,4 +1,5 @@
 \section{Higher-order Orthogonal Iteration (HOOI)}
+\label{sec_hooi}
 
 Next algorithm is Higher-Order Orthogonal Iteration (HOOI). (see~\cite{kolda_bader_2009}).
 This algorithm is a special case of alternating least squares.
@@ -10,9 +11,10 @@ by SVD, as mentioned earlier. The pseudocode form of the algorithm is
 \begin{algorithm}
 \caption{HOOI}\label{HOOI}
 \begin{algorithmic}[1]
+\Function{HOOI}{ $\A \in \R^{d_1 \times d_2 \times d_3}$, $r_2$, $r_3$}
+
 \State Initialize $F_2$, $F_3$ using HOSVD
 \Repeat 
-
 
 $\mathcal{B} := \A \times{_3} F_3^T$
     
@@ -25,6 +27,12 @@ $F_2 := d_2 \mbox{ leading left singular vectors of }{\mathcal{B}}_{(2)}$
     
     $F_3 := d_3 \mbox{ leading left singular vectors of }{\mathcal{C}}_{(3)}$
 \Until termination criterion satisfied or maximum iterations exhausted.
+
+
+\State \Return $F_2$, $F_3$
+
+
+\EndFunction
 \end{algorithmic}
 \end{algorithm}
 
@@ -58,3 +66,10 @@ orthogonality constraints.
 It is also possible to stop iterations when there is no further improvement. 
 For example, let $R_k$ be the norm of the residual
 at the {$k$th} iteration. We keep iterating as long as  $R_k \leq R_{k-1} - \epsilon$.
+
+
+
+It is important to mention here that both Newton methods we consider
+are not monotonic, so it is not sufficient to compare the current result
+with the result of the previous iteration. It is safe to stop
+iterating only if we have seen several iterations that did not improve.
